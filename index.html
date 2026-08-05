@@ -71,6 +71,22 @@
             gap: 15px;
         }
 
+        .lang-switch-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-switch-btn:hover {
+            background: rgba(59, 130, 246, 0.4);
+            color: #ffffff;
+        }
+
         .notif-container {
             position: relative;
         }
@@ -475,8 +491,8 @@
     <!-- 🔐 ሎጊን ገጽ -->
     <div id="loginOverlay">
         <div class="login-card">
-            <h2>E-Fleet Security Portal</h2>
-            <p style="font-size: 12px; color: #93c5fd; margin: 10px 0 20px 0;">የተጠቃሚ መለያ እና የይለፍ ቃል ያስገቡ</p>
+            <h2 id="logTitle">E-Fleet Security Portal</h2>
+            <p id="logSub" style="font-size: 12px; color: #93c5fd; margin: 10px 0 20px 0;">የተጠቃሚ መለያ እና የይለፍ ቃል ያስገቡ</p>
             
             <div class="login-tabs">
                 <button type="button" class="login-tab active-tab" onclick="switchLoginRole('admin', this)">👑 አድሚን</button>
@@ -486,26 +502,26 @@
             </div>
 
             <div class="form-group" style="margin-bottom: 15px;">
-                <label>የተጠቃሚ ስም (Username)</label>
+                <label id="lblUser">የተጠቃሚ ስም (Username)</label>
                 <input type="text" id="loginUser" placeholder="Username ያስገቡ">
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
-                <label>የሚስጥር ቁጥር (Password)</label>
+                <label id="lblPass">የሚስጥር ቁጥር (Password)</label>
                 <input type="password" id="loginPass" placeholder="Password ያስገቡ">
             </div>
             <div id="loginError" class="error-msg">የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!</div>
-            <button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="handleLogin()">ግባ (Authenticate & Login)</button>
+            <button class="btn-primary" id="btnLoginAction" style="width: 100%; margin-top: 10px;" onclick="handleLogin()">ግባ (Authenticate & Login)</button>
         </div>
     </div>
 
     <!-- 🛠️ የቴክኒክ ድጋፍ ፖፕአፕ ሞዳል -->
     <div id="supportModal" class="modal">
         <div class="modal-card">
-            <h3 style="color: #60a5fa; margin-bottom: 10px;">የቴክኒክ ድጋፍ ማዕከል (IT Support)</h3>
-            <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 15px;">ለማንኛውም የሲስተም ወይም የይለፍ ቃል እክል ከታች ባሉት አድራሻዎች ያግኙን፡</p>
-            <p style="font-size: 12px; color: #34d399; margin-bottom: 5px;">📞 ስልክ: +251-11-555-1234</p>
-            <p style="font-size: 12px; color: #60a5fa; margin-bottom: 20px;">✉️ ኢሜይል: it-support@efleet.gov.et</p>
-            <button class="btn-primary" onclick="closeSupportModal()">ዝጋ</button>
+            <h3 id="supTitle" style="color: #60a5fa; margin-bottom: 10px;">የቴክኒክ ድጋፍ ማዕከል (IT Support)</h3>
+            <p id="supDesc" style="font-size: 12px; color: #cbd5e1; margin-bottom: 15px;">ለማንኛውም የሲስተም ወይም የይለፍ ቃል እክል ከታች ባሉት አድራሻዎች ያግኙን፡</p>
+            <p id="supPhone" style="font-size: 12px; color: #34d399; margin-bottom: 5px;">📞 ስልክ: +251-11-555-1234</p>
+            <p id="supEmail" style="font-size: 12px; color: #60a5fa; margin-bottom: 20px;">✉️ ኢሜይል: it-support@efleet.gov.et</p>
+            <button class="btn-primary" id="btnCloseModal" onclick="closeSupportModal()">ዝጋ</button>
         </div>
     </div>
 
@@ -514,11 +530,14 @@
             <div class="logo-box">Ef</div>
             <div class="brand-title">
                 <h1>E-Fleet Command</h1>
-                <p>ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት</p>
+                <p id="brandSub">ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት</p>
             </div>
         </div>
 
         <div class="header-right">
+            <!-- 🌐 ቋንቋ መቀየሪያ ቁልፍ -->
+            <button class="lang-switch-btn" id="langSwitchBtn" onclick="toggleLanguage()">🇺🇸 English</button>
+
             <div class="notif-container">
                 <div class="notif-btn">
                     🔔
@@ -531,20 +550,20 @@
                     <div class="user-name" id="displayUserName">-</div>
                     <div class="user-role" id="displayUserRole">-</div>
                 </div>
-                <button class="logout-btn" onclick="handleLogout()">መውጫ</button>
+                <button class="logout-btn" id="btnLogout" onclick="handleLogout()">መውጫ</button>
             </div>
         </div>
     </header>
 
     <div class="dashboard-container">
         <aside id="sidebarNav">
-            <a class="nav-item active" onclick="switchPage('dashboard', this)">📊 ዳሽቦርድ</a>
-            <a class="nav-item" onclick="switchPage('dispatch', this)">🚗 የስምሪት ጥያቄዎች</a>
-            <a class="nav-item" onclick="switchPage('fuelMaintenance', this)" id="navFuelMaint">⛽ ነዳጅ እና ጋራጅ ምዝገባ</a>
+            <a class="nav-item active" onclick="switchPage('dashboard', this)" data-key="navDash">📊 ዳሽቦርድ</a>
+            <a class="nav-item" onclick="switchPage('dispatch', this)" data-key="navDispatch">🚗 የስምሪት ጥያቄዎች</a>
+            <a class="nav-item" onclick="switchPage('fuelMaintenance', this)" id="navFuelMaint" data-key="navFuel">⛽ ነዳጅ እና ጋራጅ ምዝገባ</a>
             
-            <a class="nav-item" onclick="switchPage('management', this)" id="navManagement" style="display:none;">⚙️ ምዝገባዎች (Admin)</a>
-            <a class="nav-item" onclick="switchPage('dynamicFormsPage', this)" id="navDynamicMenu" style="display:none;">✨ አዲስ ፎርም ማመንጫ (Admin)</a>
-            <a class="nav-item" onclick="switchPage('reports', this)" id="navReports" style="display:none;">📈 ሪፖርቶች እና ህትመት (Admin Only)</a>
+            <a class="nav-item" onclick="switchPage('management', this)" id="navManagement" style="display:none;" data-key="navMgmt">⚙️ ምዝገባዎች (Admin)</a>
+            <a class="nav-item" onclick="switchPage('dynamicFormsPage', this)" id="navDynamicMenu" style="display:none;" data-key="navDyn">✨ አዲስ ፎርም ማመንጫ (Admin)</a>
+            <a class="nav-item" onclick="switchPage('reports', this)" id="navReports" style="display:none;" data-key="navRep">📈 ሪፖርቶች እና ህትመት (Admin Only)</a>
         </aside>
 
         <main>
@@ -552,15 +571,15 @@
                 <div class="slide active-slide" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80');">
                     <div class="slide-overlay"></div>
                     <div class="slide-content">
-                        <h2>ዘመናዊ የተሽከርካሪ ስምሪት</h2>
-                        <p>ለተቋምዎ ንቁ እና አስተማማኝ የትራንስፖርት አስተዳደር።</p>
+                        <h2 data-key="slide1Title">ዘመናዊ የተሽከርካሪ ስምሪት</h2>
+                        <p data-key="slide1Desc">ለተቋምዎ ንቁ እና አስተማማኝ የትራንስፖርት አስተዳደር።</p>
                     </div>
                 </div>
                 <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1000&q=80');">
                     <div class="slide-overlay"></div>
                     <div class="slide-content">
-                        <h2>ፈጣን እና ቀልጣፋ ቁጥጥር</h2>
-                        <p>በሎካልስቶሬጅ እና በባለብዙ ደረጃ ማጽደቂያ የተደገፈ።</p>
+                        <h2 data-key="slide2Title">ፈጣን እና ቀልጣፋ ቁጥጥር</h2>
+                        <p data-key="slide2Desc">በሎካልስቶሬጅ እና በባለብዙ ደረጃ ማጽደቂያ የተደገፈ።</p>
                     </div>
                 </div>
             </div>
@@ -568,19 +587,19 @@
             <!-- 1. ዳሽቦርድ ገጽ -->
             <div id="dashboard" class="page-content active-page">
                 <div class="section-card">
-                    <h2>📊 አጠቃላይ ማጠቃለያ ዳሽቦርድ</h2>
+                    <h2 data-key="dashTitle">📊 አጠቃላይ ማጠቃለያ ዳሽቦርድ</h2>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-title">ንቁ ተሽከርካሪዎች</div>
+                        <div class="stat-title" data-key="statActiveTitle">ንቁ ተሽከርካሪዎች</div>
                         <div class="stat-value" id="statActiveCars">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">ጋራጅ ውስጥ ያሉ (ጥገና)</div>
+                        <div class="stat-title" data-key="statGarageTitle">ጋራጅ ውስጥ ያሉ (ጥገና)</div>
                         <div class="stat-value" style="color: #c084fc;" id="statGarageCars">0</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-title">በሂደት ላይ ያሉ ጥያቄዎች</div>
+                        <div class="stat-title" data-key="statPendingTitle">በሂደት ላይ ያሉ ጥያቄዎች</div>
                         <div class="stat-value" id="statPendingReqs">0</div>
                     </div>
                 </div>
@@ -589,22 +608,22 @@
             <!-- 2. የስምሪት ጥያቄዎች -->
             <div id="dispatch" class="page-content">
                 <div class="section-card" id="newRequestCard">
-                    <h3 style="color: #60a5fa; margin-bottom: 10px;">📝 አዲስ የተሽከርካሪ ስምሪት ጥያቄ ማቅረቢያ</h3>
+                    <h3 id="reqFormHeading" style="color: #60a5fa; margin-bottom: 10px;">📝 አዲስ የተሽከርካሪ ስምሪት ጥያቄ ማቅረቢያ</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>መነሻ ቦታ</label>
+                            <label id="lblFrom">መነሻ ቦታ</label>
                             <input type="text" id="reqFrom" placeholder="ለምሳሌ፡ ዋና መ/ቤት">
                         </div>
                         <div class="form-group">
-                            <label>መድረሻ ቦታ</label>
+                            <label id="lblTo">መድረሻ ቦታ</label>
                             <input type="text" id="reqTo" placeholder="ለምሳሌ፡ ቦሌ ቅርንጫፍ">
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <label>የጉዞ ምክንያት</label>
+                        <label id="lblReason">የጉዞ ምክንያት</label>
                         <textarea id="reqReason" rows="2" placeholder="የጉዞውን አላማ ይግለጹ..."></textarea>
                     </div>
-                    <button class="btn-primary" onclick="submitRequest()">ጥያቄውን ላክ (Submit)</button>
+                    <button class="btn-primary" id="btnSubmitReq" onclick="submitRequest()">ጥያቄውን ላክ (Submit)</button>
                 </div>
 
                 <div class="section-card">
@@ -624,18 +643,18 @@
                 </div>
 
                 <div class="section-card" id="driverRatingSummaryCard" style="display:none;">
-                    <h3 style="color: #60a5fa; margin-bottom: 10px;">👤 የእርስዎ (የነጂው) አጠቃላይ የአገልግሎት እርካታ ውጤቶች</h3>
+                    <h3 id="driverRatingHead" style="color: #60a5fa; margin-bottom: 10px;">👤 የእርስዎ (የነጂው) አጠቃላይ የአገልግሎት እርካታ ውጤቶች</h3>
                     <div style="display: flex; gap: 20px; margin-top: 15px;">
                         <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
-                            <div style="font-size: 12px; color: #34d399;">🟢 አረንጓዴ ካርዶች (እጅግ በጣም ጥሩ)</div>
+                            <div style="font-size: 12px; color: #34d399;" data-key="greenCardLbl">🟢 አረንጓዴ ካርዶች (እጅግ በጣም ጥሩ)</div>
                             <div id="countGreen" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
                         </div>
                         <div style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
-                            <div style="font-size: 12px; color: #fbbf24;">🟡 ቢጫ ካርዶች (መካከለኛ)</div>
+                            <div style="font-size: 12px; color: #fbbf24;" data-key="yellowCardLbl">🟡 ቢጫ ካርዶች (መካከለኛ)</div>
                             <div id="countYellow" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
                         </div>
                         <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
-                            <div style="font-size: 12px; color: #f87171;">🔴 ቀይ ካርዶች (ደካማ)</div>
+                            <div style="font-size: 12px; color: #f87171;" data-key="redCardLbl">🔴 ቀይ ካርዶች (ደካማ)</div>
                             <div id="countRed" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
                         </div>
                     </div>
@@ -648,11 +667,11 @@
                     <h3 id="fmCardTitle" style="color: #60a5fa; margin-bottom: 15px;">⛽ ተሽከርካሪ የነዳጅ ፍጆታ እና ጋራጅ ጥገና መመዝገቢያ</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>የተሽከርካሪ ታርጋ</label>
+                            <label id="lblCarSelect">የተሽከርካሪ ታርጋ</label>
                             <select id="fmCarSelect"><option value="">መኪና ይምረጡ</option></select>
                         </div>
                         <div class="form-group">
-                            <label>የግብይት/ስራ ዓይነት</label>
+                            <label id="lblFmType">የግብይት/ስራ ዓይነት</label>
                             <select id="fmTypeSelect">
                                 <option value="ነዳጅ ፍጆታ (Fuel)">ነዳጅ ፍጆታ (Fuel)</option>
                                 <option value="ጋራጅ ጥገና (Maintenance)">ጋራጅ ጥገና (Maintenance)</option>
@@ -661,11 +680,11 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>የነዳጅ መጠን (በሊትር) ወይም የጥገና ወጪ</label>
+                            <label id="lblFmVal">የነዳጅ መጠን (በሊትር) ወይም የጥገና ወጪ</label>
                             <input type="text" id="fmValueInput" placeholder="ለምሳሌ፡ 45 ሊትር">
                         </div>
                         <div class="form-group">
-                            <label>ማስታወሻ / ቀን</label>
+                            <label id="lblFmNote">ማስታወሻ / ቀን</label>
                             <input type="text" id="fmNoteInput" placeholder="ለምሳሌ፡ መደበኛ ሙሌት">
                         </div>
                     </div>
@@ -683,52 +702,52 @@
                 </div>
             </div>
 
-            <!-- 4. ምዝገባዎች (Admin Only - መምሪያ፣ ሰራተኛ፣ ነጂ እና ተሽከርካሪ) -->
+            <!-- 4. ምዝገባዎች (Admin Only - መምሪያ፣ ሰራተኛ) -->
             <div id="management" class="page-content">
                 <div class="section-card">
-                    <h3 style="color: #60a5fa; margin-bottom: 15px;">🏢 መምሪያዎች እና ሰራተኞች ምዝገባ</h3>
+                    <h3 id="mgmtDeptHeading" style="color: #60a5fa; margin-bottom: 15px;">🏢 መምሪያዎች እና ሰራተኞች ምዝገባ</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>የመምሪያ ክፍል ስም</label>
+                            <label id="lblDeptName">የመምሪያ ክፍል ስም</label>
                             <input type="text" id="deptNameInput" placeholder="ለምሳሌ፡ የህዝብ ግንኙነት">
                         </div>
                         <div class="form-group">
-                            <label>የኃላፊው/ሰራተኛው ስም</label>
+                            <label id="lblStaffName">የኃላፊው/ሰራተኛው ስም</label>
                             <input type="text" id="staffNameInput" placeholder="ለምሳሌ፡ ብርሃኑ ብያድጌ">
                         </div>
                     </div>
-                    <button class="btn-primary" onclick="registerStaffAndDept()">መምሪያ እና ሰራተኛ መዝግብ</button>
+                    <button class="btn-primary" id="btnRegDept" onclick="registerStaffAndDept()">መምሪያ እና ሰራተኛ መዝግብ</button>
                 </div>
 
-                <!-- 🚗 ነጂ እና ተሽከርካሪ መመዝገቢያ ክፍል (ለአድሚን ብቻ የሚታይ) -->
+                <!-- 🚗 ነጂ እና ተሽከርካሪ መመዝገቢያ ክፍል (ለአድሚን ብቻ የሚታይ - ከሌሎች ተጠቃሚዎች ተወግዷል) -->
                 <div class="section-card">
-                    <h3 style="color: #60a5fa; margin-bottom: 15px;">🚗 🚙 ነጂዎች እና ተሽከርካሪዎች ምዝገባ (Admin)</h3>
+                    <h3 id="mgmtDriverHeading" style="color: #60a5fa; margin-bottom: 15px;">🚗 🚙 ነጂዎች እና ተሽከርካሪዎች ምዝገባ (Admin)</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>የነጂው ሙሉ ስም</label>
+                            <label id="lblDriverName">የነጂው ሙሉ ስም</label>
                             <input type="text" id="adminDriverName" placeholder="ለምሳሌ፡ አበበ ከበደ">
                         </div>
                         <div class="form-group">
-                            <label>የተሽከርካሪ ታርጋ ቁጥር</label>
+                            <label id="lblCarPlate">የተሽከርካሪ ታርጋ ቁጥር</label>
                             <input type="text" id="adminCarPlate" placeholder="ለምሳሌ፡ ኮድ 2 - B12345">
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <label>የተሽከርካሪው የመጀመሪያ ሁኔታ (Status)</label>
+                        <label id="lblCarStatus">የተሽከርካሪው የመጀመሪያ ሁኔታ (Status)</label>
                         <select id="adminCarStatus">
                             <option value="Active">Active (ንቁ እና ዝግጁ)</option>
                             <option value="Garage">Garage (ጥገና ላይ ያለ)</option>
                         </select>
                     </div>
-                    <button class="btn-primary" onclick="registerDriverAndCar()">ነጂ እና መኪና አክል</button>
+                    <button class="btn-primary" id="btnRegCar" onclick="registerDriverAndCar()">ነጂ እና መኪና አክል</button>
                 </div>
 
                 <!-- የተመዘገቡ መኪናዎች እና ነጂዎች ማሳያ -->
                 <div class="section-card">
-                    <h3 style="color: #60a5fa; margin-bottom: 10px;">📋 በሲስተሙ ውስጥ ያሉ ነጂዎች እና ተሽከርካሪዎች ዝርዝር</h3>
+                    <h3 id="mgmtCarListTitle" style="color: #60a5fa; margin-bottom: 10px;">📋 በሲስተሙ ውስጥ ያሉ ነጂዎች እና ተሽከርካሪዎች ዝርዝር</h3>
                     <table class="data-table">
                         <thead>
-                            <tr>
+                            <tr id="adminCarTableHeader">
                                 <th>ተሽከርካሪ ታርጋ</th>
                                 <th>የተመደበ ነጂ</th>
                                 <th>ሁኔታ (Status)</th>
@@ -742,14 +761,14 @@
             <!-- 5. አዲስ ፎርም ማመንጫ (Admin Only) -->
             <div id="dynamicFormsPage" class="page-content">
                 <div class="section-card">
-                    <h3 style="color: #60a5fa; margin-bottom: 15px;">✨ አዲስ ፎርማት ማመንጫ (Admin Dynamic Generator)</h3>
+                    <h3 id="dynHeading" style="color: #60a5fa; margin-bottom: 15px;">✨ አዲስ ፎርማት ማመንጫ (Admin Dynamic Generator)</h3>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>የአዲሱ ፎርም ስም</label>
+                            <label id="lblDynName">የአዲሱ ፎርም ስም</label>
                             <input type="text" id="dynFormName" placeholder="ለምሳሌ፡ የዕቃ ማዘዣ ፎርም">
                         </div>
                         <div class="form-group">
-                            <label>የመስክ ዓይነት (Field Type)</label>
+                            <label id="lblDynType">የመስክ ዓይነት (Field Type)</label>
                             <select id="dynFieldType">
                                 <option value="text">ጽሑፍ (Text Input)</option>
                                 <option value="number">ቁጥር (Number)</option>
@@ -757,13 +776,13 @@
                             </select>
                         </div>
                     </div>
-                    <button class="btn-primary" onclick="generateNewFormRole()">ፎርሙን አመንጭ (Generate)</button>
+                    <button class="btn-primary" id="btnGenForm" onclick="generateNewFormRole()">ፎርሙን አመንጭ (Generate)</button>
                 </div>
 
                 <div class="section-card">
-                    <h3>በአድሚኑ የተፈጠሩ አዳዲስ ፎርሞች ማሳያ</h3>
+                    <h3 id="dynListTitle" data-key="dynListTitle">በአድሚኑ የተፈጠሩ አዳዲስ ፎርሞች ማሳያ</h3>
                     <div id="dynamicFormsContainer" style="margin-top: 15px;">
-                        <p style="font-size: 11px; color: #93c5fd;">እስካሁን የተፈጠረ አዲስ ፎርም የለም።</p>
+                        <p id="dynEmptyText" style="font-size: 11px; color: #93c5fd;">እስካሁን የተፈጠረ አዲስ ፎርም የለም።</p>
                     </div>
                 </div>
             </div>
@@ -771,12 +790,12 @@
             <!-- 6. ሪፖርቶች (Admin Only) -->
             <div id="reports" class="page-content">
                 <div class="section-card">
-                    <h3>📈 አጠቃላይ የሲስተሙ ሪፖርቶች እና የአሽከርካሪዎች የእርካታ ማጠቃለያ</h3>
+                    <h3 id="repMainTitle" data-key="repMainTitle">📈 አጠቃላይ የሲስተሙ ሪፖርቶች እና የአሽከርካሪዎች የእርካታ ማጠቃለያ</h3>
                     <div style="margin: 20px 0; background: rgba(15,23,42,0.6); padding: 15px; border-radius: 12px; border: 1px solid rgba(59,130,246,0.3);">
-                        <h4 style="color: #60a5fa; margin-bottom: 10px;">የአሽከርካሪዎች የአገልግሎት እርካታ አጠቃላይ ሪፖርት (ለአድሚን)</h4>
+                        <h4 id="repSubTitle" style="color: #60a5fa; margin-bottom: 10px;" data-key="repSubTitle">የአሽከርካሪዎች የአገልግሎት እርካታ አጠቃላይ ሪፖርት (ለአድሚን)</h4>
                         <div id="adminRatingReportSummary" style="font-size: 12px; color: #cbd5e1; display: flex; gap: 15px;"></div>
                     </div>
-                    <button class="btn-primary" onclick="window.print()">📥 ሪፖርቱን አትም (Print PDF)</button>
+                    <button class="btn-primary" id="btnPrintRep" onclick="window.print()" data-key="btnPrintRep">📥 ሪፖርቱን አትም (Print PDF)</button>
                 </div>
             </div>
         </main>
@@ -787,21 +806,244 @@
         <div class="footer-content">
             <div class="footer-left">
                 <p>&copy; 2026 E-Fleet Command System. ሁሉም መብቶች በህግ የተጠበቁ ናቸው።</p>
-                <p>የአዲስ አበባ ከተማ የመንግስት ንብረት አስተዳደር ባለስልጣን</p>
+                <p id="footerAuth">የአዲስ አበባ ከተማ የመንግስት ንብረት አስተዳደር ባለስልጣን</p>
             </div>
             <div class="footer-links">
-                <a onclick="switchPage('dashboard', document.querySelector('.nav-item'))">ዳሽቦርድ</a>
-                <a onclick="switchPage('dispatch', document.querySelectorAll('.nav-item')[1])">ስምሪት</a>
-                <a onclick="openSupportModal()">የቴክኒክ ድጋፍ (IT Support)</a>
+                <a onclick="switchPage('dashboard', document.querySelector('.nav-item'))" data-key="ftLinkDash">ዳሽቦርድ</a>
+                <a onclick="switchPage('dispatch', document.querySelectorAll('.nav-item')[1])" data-key="ftLinkDisp">ስምሪት</a>
+                <a onclick="openSupportModal()" data-key="ftLinkSup">የቴክኒክ ድጋፍ (IT Support)</a>
             </div>
             <div class="footer-right">
                 <p>Version: 2.5 Enterprise Edition</p>
-                <p>ሚስጥራዊ የውስጥ ስራ ማከናወኛ</p>
+                <p id="footerSecret" data-key="footerSecret">ሚስጥራዊ የውስጥ ስራ ማከናወኛ</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // ----------------- 🌐 ቋንቋዎች መዝገበ-ቃላት (Localization Data) -----------------
+        let currentLang = 'am';
+
+        const dict = {
+            am: {
+                pageTitle: "E-Fleet Command - ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት",
+                logTitle: "E-Fleet Security Portal",
+                logSub: "የተጠቃሚ መለያ እና የይለፍ ቃል ያስገቡ",
+                lblUser: "የተጠቃሚ ስም (Username)",
+                lblPass: "የሚስጥር ቁጥር (Password)",
+                btnLoginAction: "ግባ (Authenticate & Login)",
+                loginError: "የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!",
+                supTitle: "የቴክኒክ ድጋፍ ማዕከል (IT Support)",
+                supDesc: "ለማንኛውም የሲስተም ወይም የይለፍ ቃል እክል ከታች ባሉት አድራሻዎች ያግኙን፡",
+                supPhone: "📞 ስልክ: +251-11-555-1234",
+                supEmail: "✉️ ኢሜይል: it-support@efleet.gov.et",
+                btnCloseModal: "ዝጋ",
+                brandSub: "ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት",
+                langBtn: "🇺🇸 English",
+                logout: "መውጫ",
+                navDash: "📊 ዳሽቦርድ",
+                navDispatch: "🚗 የስምሪት ጥያቄዎች",
+                navFuel: "⛽ ነዳጅ እና ጋራጅ ምዝገባ",
+                navMgmt: "⚙️ ምዝገባዎች (Admin)",
+                navDyn: "✨ አዲስ ፎርም ማመንጫ (Admin)",
+                navRep: "📈 ሪፖርቶች እና ህትመት (Admin Only)",
+                slide1Title: "ዘመናዊ የተሽከርካሪ ስምሪት",
+                slide1Desc: "ለተቋምዎ ንቁ እና አስተማማኝ የትራንስፖርት አስተዳደር።",
+                slide2Title: "ፈጣን እና ቀልጣፋ ቁጥጥር",
+                slide2Desc: "በሎካልስቶሬጅ እና በባለብዙ ደረጃ ማጽደቂያ የተደገፈ።",
+                dashTitle: "📊 አጠቃላይ ማጠቃለያ ዳሽቦርድ",
+                statActiveTitle: "ንቁ ተሽከርካሪዎች",
+                statGarageTitle: "ጋራጅ ውስጥ ያሉ (ጥገና)",
+                statPendingTitle: "በሂደት ላይ ያሉ ጥያቄዎች",
+                reqFormHeading: "📝 አዲስ የተሽከርካሪ ስምሪት ጥያቄ ማቅረቢያ",
+                lblFrom: "መነሻ ቦታ",
+                lblTo: "መድረሻ ቦታ",
+                lblReason: "የጉዞ ምክንያት",
+                btnSubmitReq: "ጥያቄውን ላክ (Submit)",
+                tableTitleText: "የስምሪት ጥያቄዎች ዝርዝር እና ማጽደቂያ",
+                driverRatingHead: "👤 የእርስዎ (የነጂው) አጠቃላይ የአገልግሎት እርካታ ውጤቶች",
+                greenCardLbl: "🟢 አረንጓዴ ካርዶች (እጅግ በጣም ጥሩ)",
+                yellowCardLbl: "🟡 ቢጫ ካርዶች (መካከለኛ)",
+                redCardLbl: "🔴 ቀይ ካርዶች (ደካማ)",
+                fmCardTitleAdmin: "⛽ ተሽከርካሪ የነዳጅ ፍጆታ እና ጋራጅ ጥገና መመዝገቢያ",
+                fmCardTitleDriver: "⛽ የነዳጅ ወይም የጋራጅ ጥገና ማመልከቻ ማቅረቢያ (Request)",
+                fmSubmitAdmin: "መዝግብ እና ሪፖርት አድርግ",
+                fmSubmitDriver: "ማመልከቻውን ላክ (Submit Request)",
+                fmTableTitleAdmin: "የነዳጅ እና የጋራጅ ታሪክ መዝገብ",
+                fmTableTitleDriver: "የእርስዎ የነዳጅ እና ጋራጅ ማመልከቻዎች ታሪክ",
+                mgmtDeptHeading: "🏢 መምሪያዎች እና ሰራተኞች ምዝገባ",
+                lblDeptName: "የመምሪያ ክፍል ስም",
+                lblStaffName: "የኃላፊው/ሰራተኛው ስም",
+                btnRegDept: "መምሪያ እና ሰራተኛ መዝግብ",
+                mgmtDriverHeading: "🚗 🚙 ነጂዎች እና ተሽከርካሪዎች ምዝገባ (Admin)",
+                lblDriverName: "የነጂው ሙሉ ስም",
+                lblCarPlate: "የተሽከርካሪ ታርጋ ቁጥር",
+                lblCarStatus: "የተሽከርካሪው የመጀመሪያ ሁኔታ (Status)",
+                btnRegCar: "ነጂ እና መኪና አክል",
+                mgmtCarListTitle: "📋 በሲስተሙ ውስጥ ያሉ ነጂዎች እና ተሽከርካሪዎች ዝርዝር",
+                dynHeading: "✨ አዲስ ፎርማት ማመንጫ (Admin Dynamic Generator)",
+                lblDynName: "የአዲሱ ፎርም ስም",
+                lblDynType: "የመስክ ዓይነት (Field Type)",
+                btnGenForm: "ፎርሙን አመንጭ (Generate)",
+                dynListTitle: "በአድሚኑ የተፈጠሩ አዳዲስ ፎርሞች ማሳያ",
+                dynEmptyText: "እስካሁን የተፈጠረ አዲስ ፎርም የለም።",
+                repMainTitle: "📈 አጠቃላይ የሲስተሙ ሪፖርቶች እና የአሽከርካሪዎች የእርካታ ማጠቃለያ",
+                repSubTitle: "የአሽከርካሪዎች የአገልግሎት እርካታ አጠቃላይ ሪፖርት (ለአድሚን)",
+                btnPrintRep: "📥 ሪፖርቱን አትም (Print PDF)",
+                footerAuth: "የአዲስ አበባ ከተማ የመንግስት ንብረት አስተዳደር ባለስልጣን",
+                ftLinkDash: "ዳሽቦርድ",
+                ftLinkDisp: "ስምሪት",
+                ftLinkSup: "የቴክኒክ ድጋፍ (IT Support)",
+                footerSecret: "ሚስጥራዊ የውስጥ ስራ ማከናወኛ"
+            },
+            en: {
+                pageTitle: "E-Fleet Command - Modern Fleet Management System",
+                logTitle: "E-Fleet Security Portal",
+                logSub: "Enter your username and password",
+                lblUser: "Username",
+                lblPass: "Password",
+                btnLoginAction: "Authenticate & Login",
+                loginError: "Invalid username or password!",
+                supTitle: "IT Support Center",
+                supDesc: "For any system or password issues, contact us via:",
+                supPhone: "📞 Phone: +251-11-555-1234",
+                supEmail: "✉️ Email: it-support@efleet.gov.et",
+                btnCloseModal: "Close",
+                brandSub: "Modern Fleet Management System",
+                langBtn: "🇪🇹 አማርኛ",
+                logout: "Logout",
+                navDash: "📊 Dashboard",
+                navDispatch: "🚗 Dispatch Requests",
+                navFuel: "⛽ Fuel & Maintenance",
+                navMgmt: "⚙️ Management (Admin)",
+                navDyn: "✨ Dynamic Forms (Admin)",
+                navRep: "📈 Reports & Print (Admin Only)",
+                slide1Title: "Modern Fleet Operations",
+                slide1Desc: "Active and reliable transport management for your institution.",
+                slide2Title: "Fast and Efficient Control",
+                slide2Desc: "Powered by local storage and multi-tier approval workflows.",
+                dashTitle: "📊 Overview Dashboard",
+                statActiveTitle: "Active Vehicles",
+                statGarageTitle: "In Garage (Maintenance)",
+                statPendingTitle: "Pending Requests",
+                reqFormHeading: "📝 New Vehicle Dispatch Request",
+                lblFrom: "Departure Location",
+                lblTo: "Destination Location",
+                lblReason: "Reason for Travel",
+                btnSubmitReq: "Submit Request",
+                tableTitleText: "Dispatch Requests List & Approvals",
+                driverRatingHead: "👤 Your Service Satisfaction Ratings (Driver)",
+                greenCardLbl: "🟢 Green Cards (Excellent)",
+                yellowCardLbl: "🟡 Yellow Cards (Moderate)",
+                redCardLbl: "🔴 Red Cards (Poor)",
+                fmCardTitleAdmin: "⛽ Vehicle Fuel Consumption & Garage Maintenance Log",
+                fmCardTitleDriver: "⛽ Fuel or Maintenance Request Application",
+                fmSubmitAdmin: "Record & Report",
+                fmSubmitDriver: "Submit Request Application",
+                fmTableTitleAdmin: "Fuel and Garage History Records",
+                fmTableTitleDriver: "Your Fuel & Garage Requests History",
+                mgmtDeptHeading: "🏢 Departments and Staff Registration",
+                lblDeptName: "Department Name",
+                lblStaffName: "Head / Staff Name",
+                btnRegDept: "Register Dept & Staff",
+                mgmtDriverHeading: "🚗 🚙 Drivers and Cars Registration (Admin)",
+                lblDriverName: "Driver Full Name",
+                lblCarPlate: "Vehicle License Plate",
+                lblCarStatus: "Initial Vehicle Status",
+                btnRegCar: "Add Driver & Car",
+                mgmtCarListTitle: "📋 List of Registered Drivers and Vehicles",
+                dynHeading: "✨ Admin Dynamic Form Generator",
+                lblDynName: "New Form Name",
+                lblDynType: "Field Type",
+                btnGenForm: "Generate Form",
+                dynListTitle: "Admin Created Dynamic Forms Display",
+                dynEmptyText: "No custom forms created yet.",
+                repMainTitle: "📈 Overall System Reports & Driver Satisfaction Summary",
+                repSubTitle: "Driver Service Satisfaction Summary Report (Admin)",
+                btnPrintRep: "Print PDF Report",
+                footerAuth: "Addis Ababa City Government Property Administration Authority",
+                ftLinkDash: "Dashboard",
+                ftLinkDisp: "Dispatch",
+                ftLinkSup: "IT Support",
+                footerSecret: "Confidential Internal Operation"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'am') ? 'en' : 'am';
+            document.getElementById('htmlRoot').setAttribute('lang', currentLang);
+            
+            // አዝራሩን ጽሑፍ መቀየር
+            document.getElementById('langSwitchBtn').innerText = dict[currentLang].langBtn;
+            
+            // ቋሚ ጽሑፎችን መሙላት
+            document.getElementById('pageTitle').innerText = dict[currentLang].pageTitle;
+            document.getElementById('logTitle').innerText = dict[currentLang].logTitle;
+            document.getElementById('logSub').innerText = dict[currentLang].logSub;
+            document.getElementById('lblUser').innerText = dict[currentLang].lblUser;
+            document.getElementById('lblPass').innerText = dict[currentLang].lblPass;
+            document.getElementById('btnLoginAction').innerText = dict[currentLang].btnLoginAction;
+            document.getElementById('loginError').innerText = dict[currentLang].loginError;
+            
+            document.getElementById('supTitle').innerText = dict[currentLang].supTitle;
+            document.getElementById('supDesc').innerText = dict[currentLang].supDesc;
+            document.getElementById('supPhone').innerText = dict[currentLang].supPhone;
+            document.getElementById('supEmail').innerText = dict[currentLang].supEmail;
+            document.getElementById('btnCloseModal').innerText = dict[currentLang].btnCloseModal;
+            
+            document.getElementById('brandSub').innerText = dict[currentLang].brandSub;
+            document.getElementById('btnLogout').innerText = dict[currentLang].logout;
+            
+            // Sidebar ቋንቋዎች
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(dict[currentLang][key]) el.innerText = dict[currentLang][key];
+            });
+
+            // ሌሎች ርዕሶች
+            document.getElementById('reqFormHeading').innerText = dict[currentLang].reqFormHeading;
+            document.getElementById('lblFrom').innerText = dict[currentLang].lblFrom;
+            document.getElementById('lblTo').innerText = dict[currentLang].lblTo;
+            document.getElementById('lblReason').innerText = dict[currentLang].lblReason;
+            document.getElementById('btnSubmitReq').innerText = dict[currentLang].btnSubmitReq;
+            document.getElementById('tableTitleText').innerText = dict[currentLang].tableTitleText;
+            document.getElementById('driverRatingHead').innerText = dict[currentLang].driverRatingHead;
+            
+            document.getElementById('mgmtDeptHeading').innerText = dict[currentLang].mgmtDeptHeading;
+            document.getElementById('lblDeptName').innerText = dict[currentLang].lblDeptName;
+            document.getElementById('lblStaffName').innerText = dict[currentLang].lblStaffName;
+            document.getElementById('btnRegDept').innerText = dict[currentLang].btnRegDept;
+            document.getElementById('mgmtDriverHeading').innerText = dict[currentLang].mgmtDriverHeading;
+            document.getElementById('lblDriverName').innerText = dict[currentLang].lblDriverName;
+            document.getElementById('lblCarPlate').innerText = dict[currentLang].lblCarPlate;
+            document.getElementById('lblCarStatus').innerText = dict[currentLang].lblCarStatus;
+            document.getElementById('btnRegCar').innerText = dict[currentLang].btnRegCar;
+            document.getElementById('mgmtCarListTitle').innerText = dict[currentLang].mgmtCarListTitle;
+            
+            document.getElementById('dynHeading').innerText = dict[currentLang].dynHeading;
+            document.getElementById('lblDynName').innerText = dict[currentLang].lblDynName;
+            document.getElementById('lblDynType').innerText = dict[currentLang].lblDynType;
+            document.getElementById('btnGenForm').innerText = dict[currentLang].btnGenForm;
+            document.getElementById('dynEmptyText').innerText = dict[currentLang].dynEmptyText;
+            
+            document.getElementById('footerAuth').innerText = dict[currentLang].footerAuth;
+
+            // እንደ ዩዘር ሚና ሁኔታ የሚለወጡ ርዕሶችን ማስተካከል
+            if (currentUser) {
+                if(currentUser.role === 'admin') {
+                    document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleAdmin;
+                    document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitAdmin;
+                    document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleAdmin;
+                } else if(currentUser.role === 'driver') {
+                    document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleDriver;
+                    document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitDriver;
+                    document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleDriver;
+                }
+            }
+            renderRequestsTable();
+        }
+
+        // ----------------- የሲስተም አሰራር ስክሪፕቶች -----------------
         let currentSlideIndex = 0;
         function autoSlideShow() {
             const slides = document.querySelectorAll('.slide');
@@ -900,10 +1142,10 @@
                 if(newRequestCard) newRequestCard.style.display = 'block';
                 if(driverRatingSummaryCard) driverRatingSummaryCard.style.display = 'none';
                 
-                document.getElementById('fmCardTitle').innerText = '⛽ ተሽከርካሪ የነዳጅ ፍጆታ እና ጋራጅ ጥገና መመዝገቢያ';
-                document.getElementById('fmSubmitBtn').innerText = 'መዝግብ እና ሪፖርት አድርግ';
-                document.getElementById('fmTableTitle').innerText = 'የነዳጅ እና የጋራጅ ታሪክ መዝገብ';
-                document.getElementById('fmTableHeader').innerHTML = `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ማስታወሻ</th>`;
+                document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleAdmin;
+                document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitAdmin;
+                document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleAdmin;
+                document.getElementById('fmTableHeader').innerHTML = currentLang === 'am' ? `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ማስታወሻ</th>` : `<th>Plate</th><th>Category</th><th>Amount/Details</th><th>Note</th>`;
 
             } else if(currentUser.role === 'driver') {
                 navFuelMaint.style.display = 'flex'; 
@@ -913,10 +1155,10 @@
                 if(newRequestCard) newRequestCard.style.display = 'none'; 
                 if(driverRatingSummaryCard) driverRatingSummaryCard.style.display = 'block';
 
-                document.getElementById('fmCardTitle').innerText = '⛽ የነዳጅ ወይም የጋራጅ ጥገና ማመልከቻ ማቅረቢያ (Request)';
-                document.getElementById('fmSubmitBtn').innerText = 'ማመልከቻውን ላክ (Submit Request)';
-                document.getElementById('fmTableTitle').innerText = 'የእርስዎ የነዳጅ እና ጋራጅ ማመልከቻዎች ታሪክ';
-                document.getElementById('fmTableHeader').innerHTML = `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ሁኔታ (Status)</th>`;
+                document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleDriver;
+                document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitDriver;
+                document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleDriver;
+                document.getElementById('fmTableHeader').innerHTML = currentLang === 'am' ? `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ሁኔታ (Status)</th>` : `<th>Plate</th><th>Category</th><th>Amount/Details</th><th>Status</th>`;
 
             } else {
                 navFuelMaint.style.display = 'none';
@@ -938,11 +1180,11 @@
 
         function switchPage(pageId, element) {
             if((pageId === 'reports' || pageId === 'management' || pageId === 'dynamicFormsPage') && currentUser && currentUser.role !== 'admin') {
-                alert('ይህን ገጽ ማየት የሚችሉት አድሚኖች ብቻ ናቸው!');
+                alert(currentLang === 'am' ? 'ይህን ገጽ ማየት የሚችሉት አድሚኖች ብቻ ናቸው!' : 'Only administrators can view this page!');
                 return;
             }
             if(pageId === 'fuelMaintenance' && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'driver') {
-                alert('ይህን ገጽ ማየት ፈቃድ የለዎትም!');
+                alert(currentLang === 'am' ? 'ይህን ገጽ ማየት ፈቃድ የለዎትም!' : 'You do not have permission to view this page!');
                 return;
             }
 
@@ -956,12 +1198,12 @@
             const from = document.getElementById('reqFrom').value;
             const to = document.getElementById('reqTo').value;
             const reason = document.getElementById('reqReason').value;
-            if(!from || !to) { alert('መነሻ እና መድረሻ ይሙሉ'); return; }
+            if(!from || !to) { alert(currentLang === 'am' ? 'መነሻ እና መድረሻ ይሙሉ' : 'Please fill departure and destination'); return; }
 
             let reqs = getStoredData('efleet_requests');
             reqs.push({ id: Date.now(), sender: currentUser.name, driverName: 'ዋና ነጂ', from, to, reason, status: 'pending_dept', rating: null });
             setStoredData('efleet_requests', reqs);
-            alert('ጥያቄው ተልኳል! አሁን ለመምሪያ ኃላፊው ማጽደቂያ ቀርቧል።');
+            alert(currentLang === 'am' ? 'ጥያቄው ተልኳል! አሁን ለመምሪያ ኃላፊው ማጽደቂያ ቀርቧል።' : 'Request sent! Now pending department head approval.');
             document.getElementById('reqFrom').value = '';
             document.getElementById('reqTo').value = '';
             document.getElementById('reqReason').value = '';
@@ -982,11 +1224,11 @@
             }
 
             if(currentUser && currentUser.role === 'admin') {
-                headerRow.innerHTML = `<th>ጠያቂ</th><th>ነጂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>የተሰጠ ግምገማ (እርካታ)</th>`;
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>ነጂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>የተሰጠ ግምገማ (እርካታ)</th>` : `<th>Sender</th><th>Driver</th><th>Route</th><th>Reason</th><th>Status</th><th>Satisfaction Rating</th>`;
             } else if(currentUser && currentUser.role === 'driver') {
-                headerRow.innerHTML = `<th>ጠያቂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>የእርካታ ሁኔታ</th>`;
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>የእርካታ ሁኔታ</th>` : `<th>Sender</th><th>Route</th><th>Reason</th><th>Status</th><th>Satisfaction Status</th>`;
             } else {
-                headerRow.innerHTML = `<th>ጠያቂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>እርምጃ / እርካታ ግምገማ</th>`;
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>እርምጃ / እርካታ ግምገማ</th>` : `<th>Sender</th><th>Route</th><th>Reason</th><th>Status</th><th>Action / Rating</th>`;
             }
 
             displayReqs.forEach(req => {
@@ -996,39 +1238,39 @@
                 let action = '';
 
                 if(req.status === 'pending_dept') {
-                    badge = `<span class="badge badge-pending">መምሪያ ማጽደቅ ይጠብቃል</span>`;
+                    badge = `<span class="badge badge-pending">${currentLang === 'am' ? 'መምሪያ ማጽደቅ ይጠብቃል' : 'Pending Dept Approval'}</span>`;
                     if(currentUser.role === 'dept') {
-                        action = `<button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByDept(${req.id})">መምሪያው ያጸድቅ</button>`;
+                        action = `<button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByDept(${req.id})">${currentLang === 'am' ? 'መምሪያው ያጸድቅ' : 'Approve by Dept'}</button>`;
                     } else {
-                        action = `<span style="font-size:11px; color:#fbbf24;">ማጽደቅ ይጠብቃል</span>`;
+                        action = `<span style="font-size:11px; color:#fbbf24;">${currentLang === 'am' ? 'ማጽደቅ ይጠብቃል' : 'Pending Approval'}</span>`;
                     }
                 } else if(req.status === 'pending_admin') {
-                    badge = `<span class="badge badge-pending" style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4);">አድሚን ማጽደቅ ይጠብቃል</span>`;
+                    badge = `<span class="badge badge-pending" style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4);">${currentLang === 'am' ? 'አድሚን ማጽደቅ ይጠብቃል' : 'Pending Admin Approval'}</span>`;
                     if(currentUser.role === 'admin') {
-                        action = `<button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByAdmin(${req.id})">አድሚን ጨርሶ ያጸድቅ</button>`;
+                        action = `<button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByAdmin(${req.id})">${currentLang === 'am' ? 'አድሚን ጨርሶ ያጸድቅ' : 'Final Admin Approval'}</button>`;
                     } else {
-                        action = `<span style="font-size:11px; color:#60a5fa;">የአድሚን ማጽደቅ በመველየት ላይ</span>`;
+                        action = `<span style="font-size:11px; color:#60a5fa;">${currentLang === 'am' ? 'የአድሚን ማጽደቅ በመველየት ላይ' : 'Awaiting Admin'}</span>`;
                     }
                 } else {
-                    badge = `<span class="badge badge-approved">ሙሉ በሙሉ ጸድቋል</span>`;
+                    badge = `<span class="badge badge-approved">${currentLang === 'am' ? 'ሙሉ በሙሉ ጸድቋል' : 'Fully Approved'}</span>`;
                     
                     if(currentUser && (currentUser.role === 'staff' || currentUser.role === 'dept')) {
                         if(req.rating) {
+                            let rateText = req.rating === 'green' ? (currentLang === 'am' ? '🟢 አረንጓዴ (እጅግ በጣም ጥሩ)' : '🟢 Green (Excellent)') : (req.rating === 'yellow' ? (currentLang === 'am' ? '🟡 ቢጫ (መካከለኛ)' : '🟡 Yellow (Moderate)') : (currentLang === 'am' ? '🔴 ቀይ (ደካማ)' : '🔴 Red (Poor)'));
                             let rateColor = req.rating === 'green' ? '#10b981' : (req.rating === 'yellow' ? '#f59e0b' : '#ef4444');
-                            let rateText = req.rating === 'green' ? '🟢 አረንጓዴ (እጅግ በጣም ጥሩ)' : (req.rating === 'yellow' ? '🟡 ቢጫ (መካከለኛ)' : '🔴 ቀይ (ደካማ)');
-                            action = `<span style="font-size:11px; color:${rateColor}; font-weight:bold;">ግምገማ: ${rateText}</span>`;
+                            action = `<span style="font-size:11px; color:${rateColor}; font-weight:bold;">${currentLang === 'am' ? 'ግምገማ' : 'Rating'}: ${rateText}</span>`;
                         } else {
                             action = `
-                                <div style="font-size:11px; margin-bottom:4px; color:#93c5fd;">አገልግሎቱን ይገምግሙ:</div>
+                                <div style="font-size:11px; margin-bottom:4px; color:#93c5fd;">${currentLang === 'am' ? 'አገልግሎቱን ይገምግሙ:' : 'Rate service:'}</div>
                                 <div class="rating-cards">
-                                    <button class="rate-btn rate-green" onclick="rateDriver(${req.id}, 'green')">🟢 አረንጓዴ</button>
-                                    <button class="rate-btn rate-yellow" onclick="rateDriver(${req.id}, 'yellow')">🟡 ቢጫ</button>
-                                    <button class="rate-btn rate-red" onclick="rateDriver(${req.id}, 'red')">🔴 ቀይ</button>
+                                    <button class="rate-btn rate-green" onclick="rateDriver(${req.id}, 'green')">🟢</button>
+                                    <button class="rate-btn rate-yellow" onclick="rateDriver(${req.id}, 'yellow')">🟡</button>
+                                    <button class="rate-btn rate-red" onclick="rateDriver(${req.id}, 'red')">🔴</button>
                                 </div>
                             `;
                         }
                     } else {
-                        let rateDisplay = req.rating ? (req.rating === 'green' ? '🟢 አረንጓዴ' : (req.rating === 'yellow' ? '🟡 ቢጫ' : '🔴 ቀይ')) : 'ገና አልተገመገመም';
+                        let rateDisplay = req.rating ? req.rating : (currentLang === 'am' ? 'ገና አልተገመገመም' : 'Not rated');
                         action = `<span style="font-size:11px; color:#93c5fd;">${rateDisplay}</span>`;
                     }
                 }
@@ -1050,7 +1292,7 @@
             reqs = reqs.map(r => { if(r.id === id) r.rating = ratingType; return r; });
             setStoredData('efleet_requests', reqs);
             renderRequestsTable();
-            alert('ለሰጡት ግምገማ እናመሰግናለን!');
+            alert(currentLang === 'am' ? 'ለሰጡት ግምገማ እናመሰግናለን!' : 'Thank you for your rating!');
         }
 
         function renderAdminAndDriverRatings() {
@@ -1070,9 +1312,9 @@
             const adminReportEl = document.getElementById('adminRatingReportSummary');
             if(adminReportEl) {
                 adminReportEl.innerHTML = `
-                    <div style="flex: 1; background: rgba(16,185,129,0.1); padding: 10px; border-radius: 8px; border: 1px solid #10b981;">🟢 አረንጓዴ (ጥሩ): <b>${gCount}</b></div>
-                    <div style="flex: 1; background: rgba(245,158,11,0.1); padding: 10px; border-radius: 8px; border: 1px solid #f59e0b;">🟡 ቢጫ (መካከለኛ): <b>${yCount}</b></div>
-                    <div style="flex: 1; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 8px; border: 1px solid #ef4444;">🔴 ቀይ (ደካማ): <b>${rCount}</b></div>
+                    <div style="flex: 1; background: rgba(16,185,129,0.1); padding: 10px; border-radius: 8px; border: 1px solid #10b981;">🟢 ${currentLang === 'am' ? 'አረንጓዴ (ጥሩ)' : 'Green (Good)'}: <b>${gCount}</b></div>
+                    <div style="flex: 1; background: rgba(245,158,11,0.1); padding: 10px; border-radius: 8px; border: 1px solid #f59e0b;">🟡 ${currentLang === 'am' ? 'ቢጫ (መካከለኛ)' : 'Yellow (Moderate)'}: <b>${yCount}</b></div>
+                    <div style="flex: 1; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 8px; border: 1px solid #ef4444;">🔴 ${currentLang === 'am' ? 'ቀይ (ደካማ)' : 'Red (Poor)'}: <b>${rCount}</b></div>
                 `;
             }
         }
@@ -1083,7 +1325,7 @@
             setStoredData('efleet_requests', reqs);
             renderRequestsTable();
             refreshDashboardStats();
-            alert('መምሪያው አጸድቆታል! አሁን ለአድሚን የመጨረሻ ማጽደቂያ ተልኳል።');
+            alert(currentLang === 'am' ? 'መምሪያው አጸድቆታል! አሁን ለአድሚን የመጨረሻ ማጽደቂያ ተልኳል።' : 'Approved by department! Sent to admin for final approval.');
         }
 
         function approveByAdmin(id) {
@@ -1092,19 +1334,19 @@
             setStoredData('efleet_requests', reqs);
             renderRequestsTable();
             refreshDashboardStats();
-            alert('ጥያቄው በአድሚኑ በመጨረሻ ጸድቋል!');
+            alert(currentLang === 'am' ? 'ጥያቄው በአድሚኑ በመጨረሻ ጸድቋል!' : 'Request fully approved by admin!');
         }
 
         function registerStaffAndDept() {
             const dept = document.getElementById('deptNameInput').value;
             const staff = document.getElementById('staffNameInput').value;
-            if(!dept || !staff) { alert('እባክዎ የመምሪያውን እና የሰራተኛውን ስም ይሙሉ!'); return; }
+            if(!dept || !staff) { alert(currentLang === 'am' ? 'እባክዎ የመምሪያውን እና የሰራተኛውን ስም ይሙሉ!' : 'Please fill department and staff name!'); return; }
 
             let depts = getStoredData('efleet_departments');
             depts.push({ dept, staff });
             setStoredData('efleet_departments', depts);
 
-            alert('መምሪያው እና ሰራተኛው በአድሚን ተመዝግበዋል!');
+            alert(currentLang === 'am' ? 'መምሪያው እና ሰራተኛው በአድሚን ተመዝግበዋል!' : 'Department and staff registered successfully!');
             document.getElementById('deptNameInput').value = '';
             document.getElementById('staffNameInput').value = '';
         }
@@ -1115,7 +1357,7 @@
             const carStatus = document.getElementById('adminCarStatus').value;
 
             if(!driverName || !carPlate) {
-                alert('እባክዎ የነጂውን ስም እና የተሽከርካሪ ታርጋ በትክክል ይሙሉ!');
+                alert(currentLang === 'am' ? 'እባክዎ የነጂውን ስም እና የተሽከርካሪ ታርጋ በትክክል ይሙሉ!' : 'Please fill driver name and car plate!');
                 return;
             }
 
@@ -1123,7 +1365,7 @@
             cars.push({ id: Date.now(), car: carPlate, driver: driverName, status: carStatus });
             setStoredData('efleet_cars', cars);
 
-            alert('አዲሱ ተሽከርካሪ እና ነጂ በተሳካ ሁኔታ ተመዝግበዋል!');
+            alert(currentLang === 'am' ? 'አዲሱ ተሽከርካሪ እና ነጂ በተሳካ ሁኔታ ተመዝግበዋል!' : 'New car and driver registered successfully!');
             document.getElementById('adminDriverName').value = '';
             document.getElementById('adminCarPlate').value = '';
 
@@ -1142,7 +1384,7 @@
                 tbody.innerHTML += `
                     <tr>
                         <td>${c.car}</td>
-                        <td>${c.driver || 'ያልተመደበ'}</td>
+                        <td>${c.driver || (currentLang === 'am' ? 'ያልተመደበ' : 'Unassigned')}</td>
                         <td><span class="badge ${badgeClass}">${c.status}</span></td>
                     </tr>
                 `;
@@ -1152,13 +1394,13 @@
         function generateNewFormRole() {
             const name = document.getElementById('dynFormName').value;
             const type = document.getElementById('dynFieldType').value;
-            if(!name) { alert('እባክዎ ስም ያስገቡ!'); return; }
+            if(!name) { alert(currentLang === 'am' ? 'እባክዎ ስም ያስገቡ!' : 'Please enter a name!'); return; }
 
             let forms = getStoredData('efleet_dyn_forms');
             forms.push({ id: Date.now(), name, type });
             setStoredData('efleet_dyn_forms', forms);
 
-            alert('አዲሱ ፎርም በአድሚን ተፈጥሮ ተመዝግቧል!');
+            alert(currentLang === 'am' ? 'አዲሱ ፎርም በአድሚን ተፈጥሮ ተመዝግቧል!' : 'New form generated successfully!');
             document.getElementById('dynFormName').value = '';
             renderDynamicForms();
         }
@@ -1167,14 +1409,14 @@
             const container = document.getElementById('dynamicFormsContainer');
             const forms = getStoredData('efleet_dyn_forms');
             if(forms.length === 0) {
-                container.innerHTML = `<p style="font-size: 11px; color: #93c5fd;">እስካሁን የተፈጠረ አዲስ ፎርም የለም።</p>`;
+                container.innerHTML = `<p style="font-size: 11px; color: #93c5fd;">${currentLang === 'am' ? 'እስካሁን የተፈጠረ አዲስ ፎርም የለም።' : 'No custom forms created yet.'}</p>`;
                 return;
             }
             container.innerHTML = '';
             forms.forEach(f => {
                 container.innerHTML += `
                     <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(59,130,246,0.3);">
-                        <strong>✨ ፎርም ስም:</strong> ${f.name} &nbsp;|&nbsp; <strong>አይነት:</strong> ${f.type}
+                        <strong>✨ ${currentLang === 'am' ? 'ፎርም ስም' : 'Form Name'}:</strong> ${f.name} &nbsp;|&nbsp; <strong>${currentLang === 'am' ? 'አይነት' : 'Type'}:</strong> ${f.type}
                     </div>
                 `;
             });
@@ -1185,18 +1427,18 @@
             const type = document.getElementById('fmTypeSelect').value;
             const val = document.getElementById('fmValueInput').value;
             const note = document.getElementById('fmNoteInput').value;
-            if(!car || !val) { alert('መረጃ ይሙሉ'); return; }
+            if(!car || !val) { alert(currentLang === 'am' ? 'መረጃ ይሙሉ' : 'Please fill all details'); return; }
 
             let logs = getStoredData('efleet_fuel_maint');
             
             if(currentUser.role === 'admin') {
-                logs.push({ car, type, val, note, status: 'መዝገብ (Recorded)' });
+                logs.push({ car, type, val, note, status: currentLang === 'am' ? 'መዝገብ (Recorded)' : 'Recorded' });
                 setStoredData('efleet_fuel_maint', logs);
-                alert('በተሳካ ሁኔታ ተመዝግቧል!');
+                alert(currentLang === 'am' ? 'በተሳካ ሁኔታ ተመዝግቧል!' : 'Successfully recorded!');
             } else {
-                logs.push({ car, type, val, note: `${note} (በነጂ የቀረበ)`, status: 'የጸደቀ ጥያቄ ይጠብቃል (Pending)' });
+                logs.push({ car, type, val, note: `${note} (${currentLang === 'am' ? 'በነጂ የቀረበ' : 'Driver Submitted'})`, status: currentLang === 'am' ? 'የጸደቀ ጥያቄ ይጠብቃል (Pending)' : 'Pending Approval' });
                 setStoredData('efleet_fuel_maint', logs);
-                alert('የነዳጅ/ጋራጅ ማመልከቻዎ ለአድሚን ተልኳል!');
+                alert(currentLang === 'am' ? 'የነዳጅ/ጋራጅ ማመልከቻዎ ለአድሚን ተልኳል!' : 'Fuel/maintenance request sent to admin!');
             }
 
             document.getElementById('fmValueInput').value = '';
@@ -1212,7 +1454,7 @@
                 if(currentUser.role === 'admin') {
                     tbody.innerHTML += `<tr><td>${l.car}</td><td>${l.type}</td><td>${l.val}</td><td>${l.note || '-'}</td></tr>`;
                 } else if(currentUser.role === 'driver') {
-                    tbody.innerHTML += `<tr><td>${l.car}</td><td>${l.type}</td><td>${l.val}</td><td><span class="badge badge-pending">${l.status || 'በሂደት ላይ'}</span></td></tr>`;
+                    tbody.innerHTML += `<tr><td>${l.car}</td><td>${l.type}</td><td>${l.val}</td><td><span class="badge badge-pending">${l.status || 'Pending'}</span></td></tr>`;
                 }
             });
         }
@@ -1220,7 +1462,7 @@
         function populateCarDropdown() {
             const select = document.getElementById('fmCarSelect');
             const cars = getStoredData('efleet_cars');
-            select.innerHTML = '<option value="">መኪና ይምረጡ</option>';
+            select.innerHTML = `<option value="">${currentLang === 'am' ? 'መኪና ይምረጡ' : 'Select Car'}</option>`;
             cars.forEach(c => { select.innerHTML += `<option value="${c.car}">${c.car} (${c.driver || ''})</option>`; });
         }
 
