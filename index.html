@@ -1,0 +1,2059 @@
+<!DOCTYPE html>
+<html lang="am" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">E-Fleet Command - ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1e40af 100%);
+            color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 30px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-box {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .brand-title h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .brand-title p {
+            font-size: 11px;
+            color: #93c5fd;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lang-switch-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-switch-btn:hover {
+            background: rgba(59, 130, 246, 0.4);
+            color: #ffffff;
+        }
+
+        .notif-container {
+            position: relative;
+        }
+
+        .notif-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #60a5fa;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ef4444;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 6px 14px;
+            border-radius: 30px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f3f4f6;
+        }
+
+        .user-role {
+            font-size: 10px;
+            color: #6ee7b7;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+        }
+
+        aside {
+            width: 260px;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(59, 130, 246, 0.15);
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: #93c5fd;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(29, 78, 216, 0.1));
+            color: #60a5fa;
+            border-left: 3px solid #3b82f6;
+        }
+
+        main {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-content {
+            display: none;
+            flex: 1;
+        }
+
+        .page-content.active-page {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-slider {
+            width: 100%;
+            height: 200px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 25px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .slide.active-slide {
+            opacity: 1;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.2));
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide-content h2 { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .slide-content p { font-size: 12px; color: #93c5fd; }
+
+        .section-card {
+            background: rgba(30, 58, 138, 0.35);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 25px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(30, 58, 138, 0.35);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .stat-title { font-size: 12px; color: #93c5fd; margin-bottom: 8px; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #ffffff; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: #93c5fd;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover { opacity: 0.9; }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: left;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+        }
+
+        .data-table th { color: #60a5fa; background: rgba(15, 23, 42, 0.4); }
+        .data-table td { color: #cbd5e1; }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-approved { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+        .rating-cards {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .rate-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            color: white;
+            transition: transform 0.2s;
+        }
+        .rate-btn:hover { transform: scale(1.05); }
+        .rate-green { background: #10b981; }
+        .rate-yellow { background: #f59e0b; color: #1e1b4b; }
+        .rate-red { background: #ef4444; }
+
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .login-card {
+            background: rgba(30, 58, 138, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 20px;
+            padding: 35px;
+            width: 420px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .login-tabs {
+            display: flex;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #93c5fd;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .login-tab.active-tab {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #ffffff;
+        }
+
+        .error-msg { color: #f87171; font-size: 11px; margin-top: 10px; display: none; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 4000;
+        }
+        .modal-card {
+            background: #1e293b;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 25px;
+            border-radius: 16px;
+            width: 350px;
+            text-align: center;
+        }
+
+        footer {
+            background: rgba(10, 15, 30, 0.95);
+            border-top: 1px solid rgba(59, 130, 246, 0.25);
+            padding: 20px 30px;
+            font-size: 11px;
+            color: #93c5fd;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-left p {
+            margin-bottom: 3px;
+            color: #cbd5e1;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            color: #60a5fa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-right {
+            text-align: right;
+            color: #94a3b8;
+        }
+
+        /* 🖨️ የህትመት (Print) ልዩ ማስተካከያ */
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            header, aside, footer, .btn-primary, .btn-danger, .btn-warning, .lang-switch-btn, .logout-btn, .notif-container {
+                display: none !important;
+            }
+            .dashboard-container {
+                display: block !important;
+            }
+            main {
+                padding: 0 !important;
+            }
+            .section-card {
+                background: #ffffff !important;
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+                color: #000000 !important;
+                margin-bottom: 20px !important;
+                page-break-inside: avoid;
+            }
+            .data-table th {
+                color: #000 !important;
+                background: #eee !important;
+                border-bottom: 2px solid #000 !important;
+            }
+            .data-table td {
+                color: #000 !important;
+                border-bottom: 1px solid #ddd !important;
+            }
+            h3, h4 {
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔐 ሎጊን ገጽ -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2 id="logTitle">E-Fleet Security Portal</h2>
+            <p id="logSub" style="font-size: 12px; color: #93c5fd; margin: 10px 0 20px 0;">የተጠቃሚ መለያ እና የይለፍ ቃል ያስገቡ</p>
+            
+            <div class="login-tabs">
+                <button type="button" class="login-tab active-tab" onclick="switchLoginRole('admin', this)">👑 አድሚን</button>
+                <button type="button" class="login-tab" onclick="switchLoginRole('dept', this)">🏢 መምሪያ</button>
+                <button type="button" class="login-tab" onclick="switchLoginRole('driver', this)">🚗 ነጂ</button>
+                <button type="button" class="login-tab" onclick="switchLoginRole('staff', this)">📋 ሰራተኛ</button>
+            </div>
+
+            <div class="form-group" id="standardUserGroup" style="margin-bottom: 15px;">
+                <label id="lblUser">የተጠቃሚ ስም (Username)</label>
+                <input type="text" id="loginUser" placeholder="Username ያስገቡ">
+            </div>
+
+            <div class="form-group" id="dropdownSelectGroup" style="margin-bottom: 15px; display: none;">
+                <label id="lblDropdownSelect">መለያ ይምረጡ</label>
+                <select id="loginDropdownSelect" onchange="onLoginDropdownSelect()">
+                    <option value="">-- መለያ ይምረጡ --</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label id="lblPass">የሚስጥር ቁጥር (Password)</label>
+                <input type="password" id="loginPass" placeholder="Password ያስገቡ">
+            </div>
+            <div id="loginError" class="error-msg">የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!</div>
+            <button class="btn-primary" id="btnLoginAction" style="width: 100%; margin-top: 10px;" onclick="handleLogin()">ግባ (Authenticate & Login)</button>
+        </div>
+    </div>
+
+    <!-- 🛠️ የቴክኒክ ድጋፍ ፖፕአፕ ሞዳል -->
+    <div id="supportModal" class="modal">
+        <div class="modal-card">
+            <h3 id="supTitle" style="color: #60a5fa; margin-bottom: 10px;">የቴክኒክ ድጋፍ ማዕከል (IT Support)</h3>
+            <p id="supDesc" style="font-size: 12px; color: #cbd5e1; margin-bottom: 15px;">ለማንኛውም የሲስተም ወይም የይለፍ ቃል እክል ከታች ባሉት አድራሻዎች ያግኙን፡</p>
+            <p id="supPhone" style="font-size: 12px; color: #34d399; margin-bottom: 5px;">📞 ስልክ: +251-11-555-1234</p>
+            <p id="supEmail" style="font-size: 12px; color: #60a5fa; margin-bottom: 20px;">✉️ ኢሜይል: it-support@efleet.gov.et</p>
+            <button class="btn-primary" id="btnCloseModal" onclick="closeSupportModal()">ዝጋ</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-section">
+            <div class="logo-box">Ef</div>
+            <div class="brand-title">
+                <h1>E-Fleet Command</h1>
+                <p id="brandSub">ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button class="lang-switch-btn" id="langSwitchBtn" onclick="toggleLanguage()">🇺🇸 English</button>
+
+            <div class="notif-container">
+                <div class="notif-btn">
+                    🔔
+                    <div class="notif-badge" id="notifBadgeCount">0</div>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-info">
+                    <div class="user-name" id="displayUserName">-</div>
+                    <div class="user-role" id="displayUserRole">-</div>
+                </div>
+                <button class="logout-btn" id="btnLogout" onclick="handleLogout()">መውጫ</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside id="sidebarNav">
+            <a class="nav-item active" onclick="switchPage('dashboard', this)" data-key="navDash">📊 ዳሽቦርድ</a>
+            <a class="nav-item" onclick="switchPage('dispatch', this)" data-key="navDispatch">🚗 የስምሪት ጥያቄዎች</a>
+            <a class="nav-item" onclick="switchPage('fuelMaintenance', this)" id="navFuelMaint" style="display:none;" data-key="navFuel">⛽ ነዳጅ እና ጋራጅ ምዝገባ</a>
+            <a class="nav-item" onclick="switchPage('management', this)" id="navManagement" style="display:none;" data-key="navMgmt">⚙️ ምዝገባዎች እና ድልድል (Admin)</a>
+            <a class="nav-item" onclick="switchPage('dynamicFormsPage', this)" id="navDynamicMenu" style="display:none;" data-key="navDyn">✨ አዲስ ፎርም ማመንጫ (Admin)</a>
+            <a class="nav-item" onclick="switchPage('reports', this)" id="navReports" style="display:none;" data-key="navRep">📈 ሪፖርቶች እና ህትመት (Admin Only)</a>
+        </aside>
+
+        <main>
+            <div class="hero-slider" id="heroSliderContainer">
+                <div class="slide active-slide" style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1000&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h2 data-key="slide1Title">ዘመናዊ የተሽከርካሪ ስምሪት</h2>
+                        <p data-key="slide1Desc">ለተቋምዎ ንቁ እና አስተማማኝ የትራንስፖርት አስተዳደር።</p>
+                    </div>
+                </div>
+                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1000&q=80');">
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <h2 data-key="slide2Title">ፈጣን እና ቀልጣፋ ቁጥጥር</h2>
+                        <p data-key="slide2Desc">በሎካልስቶሬጅ እና በባለብዙ ደረጃ ማጽደቂያ የተደገፈ።</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1. ዳሽቦርድ ገጽ -->
+            <div id="dashboard" class="page-content active-page">
+                <div class="section-card">
+                    <h2 data-key="dashTitle">📊 አጠቃላይ ማጠቃለያ ዳሽቦርድ</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title" data-key="statActiveTitle">ንቁ ተሽከርካሪዎች</div>
+                        <div class="stat-value" id="statActiveCars">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title" data-key="statGarageTitle">ጋራጅ ውስጥ ያሉ (ጥገና)</div>
+                        <div class="stat-value" style="color: #c084fc;" id="statGarageCars">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title" data-key="statPendingTitle">በሂደት ላይ ያሉ ጥያቄዎች</div>
+                        <div class="stat-value" id="statPendingReqs">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. የስምሪት ጥያቄዎች -->
+            <div id="dispatch" class="page-content">
+                <div class="section-card" id="newRequestCard">
+                    <h3 id="reqFormHeading" style="color: #60a5fa; margin-bottom: 10px;">📝 አዲስ የተሽከርካሪ ስምሪት ጥያቄ ማቅረቢያ</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblFrom">መነሻ ቦታ</label>
+                            <input type="text" id="reqFrom" placeholder="ለምሳሌ፡ ዋና መ/ቤት">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblTo">መድረሻ ቦታ</label>
+                            <input type="text" id="reqTo" placeholder="ለምሳሌ፡ ቦሌ ቅርንጫፍ">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label id="lblReason">የጉዞ ምክንያት</label>
+                        <textarea id="reqReason" rows="2" placeholder="የጉዞውን አላማ ይግለጹ..."></textarea>
+                    </div>
+                    <button class="btn-primary" id="btnSubmitReq" onclick="submitRequest()">ጥያቄውን ላክ (Submit)</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="tableTitleText">የስምሪት ጥያቄዎች ዝርዝር እና ማጽደቂያ</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr id="tableHeaderRow">
+                                <th>ጠያቂ</th>
+                                <th>መነሻ - መድረሻ</th>
+                                <th>ምክንያት</th>
+                                <th>የአሁኑ ደረጃ (Status)</th>
+                                <th>እርምጃ / እርካታ ግምገማ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="section-card" id="driverAssignmentCard" style="display:none;">
+                    <h3 style="color: #60a5fa; margin-bottom: 10px;" id="driverAssignTitle">🚗 የተመደቡልዎ የስምሪት እና የምደባ ማረጋገጫዎች</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th id="thDriverRoute">ጉዞ (መነሻ - መድረሻ)</th>
+                                <th id="thDriverCar">የተመደበ መኪና</th>
+                                <th id="thDriverStatus">የምደባ ሁኔታ</th>
+                                <th id="thDriverAction">እርምጃ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="driverAssignmentTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="section-card" id="driverRatingSummaryCard" style="display:none;">
+                    <h3 id="driverRatingHead" style="color: #60a5fa; margin-bottom: 10px;">👤 የእርስዎ (የነጂው) አጠቃላይ የአገልግሎት እርካታ ውጤቶች</h3>
+                    <div style="display: flex; gap: 20px; margin-top: 15px;">
+                        <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 12px; color: #34d399;" data-key="greenCardLbl">🟢 አረንጓዴ ካርዶች (እጅግ በጣም ጥሩ)</div>
+                            <div id="countGreen" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 12px; color: #fbbf24;" data-key="yellowCardLbl">🟡 ቢጫ ካርዶች (መካከለኛ)</div>
+                            <div id="countYellow" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; padding: 15px; border-radius: 12px; flex: 1; text-align: center;">
+                            <div style="font-size: 12px; color: #f87171;" data-key="redCardLbl">🔴 ቀይ ካርዶች (ደካማ)</div>
+                            <div id="countRed" style="font-size: 22px; font-weight: bold; margin-top: 5px;">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. ነዳጅ እና ጋራጅ ምዝገባ -->
+            <div id="fuelMaintenance" class="page-content">
+                <div class="section-card">
+                    <h3 id="fmCardTitle" style="color: #60a5fa; margin-bottom: 15px;">⛽ ተሽከርካሪ የነዳጅ ፍጆታ እና ጋራጅ ጥገና መመዝገቢያ</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblCarSelect">የተሽከርካሪ ታርጋ</label>
+                            <select id="fmCarSelect"><option value="">መኪና ይምረጡ</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblFmType">የግብይት/ስራ ዓይነት</label>
+                            <select id="fmTypeSelect">
+                                <option value="ነዳጅ ፍጆታ (Fuel)">ነዳጅ ፍጆታ (Fuel)</option>
+                                <option value="ጋራጅ ጥገና (Maintenance)">ጋራጅ ጥገና (Maintenance)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblFmVal">የነዳጅ መጠን (በሊትር) ወይም የጥገና ወጪ</label>
+                            <input type="text" id="fmValueInput" placeholder="ለምሳሌ፡ 45 ሊትር">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblFmNote">ማስታወሻ / ቀን</label>
+                            <input type="text" id="fmNoteInput" placeholder="ለምሳሌ፡ መደበኛ ሙሌት">
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="fmSubmitBtn" onclick="saveFuelMaintenance()">መዝግብ እና ሪፖርት አድርግ</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="fmTableTitle">የነዳጅ እና የጋራጅ ታሪክ መዝገብ</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr id="fmTableHeader"><th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ማስታወሻ</th></tr>
+                        </thead>
+                        <tbody id="fmTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. ምዝገባዎች እና ድልድል (Admin Only) -->
+            <div id="management" class="page-content">
+                <div class="section-card">
+                    <h3 id="mgmtDeptHeading" style="color: #60a5fa; margin-bottom: 15px;">🏢 መምሪያዎች፣ የስራ ክፍሎች እና ሰራተኞች ምዝገባ</h3>
+                    <input type="hidden" id="editDeptId" value="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblDeptName">የመምሪያ ወይም የዳይሬክቶሬት ስም</label>
+                            <input type="text" id="deptNameInput" placeholder="ለምሳሌ፡ የህዝብ ግንኙነት ዳይሬክቶሬት">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblSectionName">የስራ ክፍል (Sub-Department)</label>
+                            <input type="text" id="sectionNameInput" placeholder="ለምሳሌ፡ የሚዲያ ክፍል">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblLeaderName">የስራ ክፍል መሪ / ኃላፊ ስም</label>
+                            <input type="text" id="leaderNameInput" placeholder="ለምሳሌ፡ ብርሃኑ ብያድጌ">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblStaffListNames">በመሪው ስር ያሉ ሰራተኞች ስሞች እና ስልኮች</label>
+                            <input type="text" id="staffListNamesInput" placeholder="ለምሳሌ፡ አበበ (0911...), ከበደ (0922...)">
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnRegDept" onclick="registerDepartmentAndStaff()">መምሪያ እና ሰራተኞች መዝግብ</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 style="color: #60a5fa; margin-bottom: 10px;">📋 የተመዘገቡ መምሪያዎች፣ የስራ ክፍሎች እና ሰራተኞች ዝርዝር</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>መምሪያ / ዳይሬክቶሬት</th>
+                                <th>የስራ ክፍል</th>
+                                <th>የስራ ክፍል መሪ</th>
+                                <th>ሰራተኞች እና ስልኮች</th>
+                                <th>እርምጃ (Actions)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminRegisteredDeptsTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="mgmtDriverHeading" style="color: #60a5fa; margin-bottom: 15px;">🚗 🚙 ነጂዎች እና ተሽከርካሪዎች ምዝገባ (Admin)</h3>
+                    <input type="hidden" id="editCarId" value="">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblDriverName">የነጂው ሙሉ ስም (ዋና እና ረዳት ሰራተኞችን ጨምሮ)</label>
+                            <input type="text" id="adminDriverName" placeholder="ለምሳሌ፡ አበበ ከበደ (ከነረዳቶቹ)">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblCarPlate">የተሽከርካሪ ታርጋ ቁጥር</label>
+                            <input type="text" id="adminCarPlate" placeholder="ለምሳሌ፡ ኮድ 2 - B12345">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label id="lblCarStatus">የተሽከርካሪው የመጀመሪያ ሁኔታ (Status)</label>
+                        <select id="adminCarStatus">
+                            <option value="Active">Active (ንቁ እና ዝግጁ)</option>
+                            <option value="Garage">Garage (ጥገና ላይ ያለ)</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="btnRegCar" onclick="registerDriverAndCar()">ነጂ እና መኪና አክል</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 style="color: #60a5fa; margin-bottom: 15px;">👤 ለሰራተኞች፣ መምሪያዎች እና ነጂዎች የስርዓት ዩዘር መለያ መፍጠሪያ (Accounts)</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>የዩዘር ስም (Username)</label>
+                            <input type="text" id="newAccUsername" placeholder="ለምሳሌ፡ user_birhanu">
+                        </div>
+                        <div class="form-group">
+                            <label>የሚስጥር ቁጥር (Password)</label>
+                            <input type="password" id="newAccPassword" placeholder="የይለፍ ቃል ያስገቡ">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>የመለያው ዓይነት (Role)</label>
+                            <select id="newAccRole" onchange="onAccountRoleChange()">
+                                <option value="staff">ሰራተኛ (Staff)</option>
+                                <option value="dept">መምሪያ (Department)</option>
+                                <option value="driver">ነጂ (Driver)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ሙሉ ስም ወይም መጠሪያ</label>
+                            <input type="text" id="newAccFullName" placeholder="ለምሳሌ፡ ብርሃኑ ብያድጌ">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="registerSystemAccount()">የዩዘር መለያ ፍጠር</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="assignTitle" style="color: #60a5fa; margin-bottom: 15px;">🔗 ነጂውን / መኪናውን ለተወሰነ መምሪያ ወይም ሰራተኛ መመደብ (Assign Fleet)</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblAssignDriver">ነጂ/መኪና ይምረጡ</label>
+                            <select id="assignCarSelect"><option value="">መኪና/ነጂ ይምረጡ</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblAssignDept">የሚመደብለት መምሪያ ወይም ሰራተኛ</label>
+                            <select id="assignDeptSelect"><option value="">መምሪያ ይምረጡ</option></select>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnAssignAction" onclick="assignCarToDepartment()">ነጂውን መምሪያው ላይ መድብ (Assign)</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="mgmtCarListTitle" style="color: #60a5fa; margin-bottom: 10px;">📋 በሲስተሙ ውስጥ ያሉ ነጂዎች፣ ተሽከርካሪዎች እና የድልድል ሁኔታ</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr id="adminCarTableHeader">
+                                <th>ተሽከርካሪ ታርጋ</th>
+                                <th>የተመደበ ነጂ / ሰራተኞች</th>
+                                <th>የተመደበለት መምሪያ/ሰራተኛ</th>
+                                <th>ሁኔታ (Status)</th>
+                                <th>እርምጃ (Actions)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminRegisteredCarsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. አዲስ ፎርም ማመንጫ (Admin Only) -->
+            <div id="dynamicFormsPage" class="page-content">
+                <div class="section-card">
+                    <h3 id="dynHeading" style="color: #60a5fa; margin-bottom: 15px;">✨ አዲስ ፎርማት ማመንጫ (Admin Dynamic Generator)</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label id="lblDynName">የአዲሱ ፎርም ስም</label>
+                            <input type="text" id="dynFormName" placeholder="ለምሳሌ፡ የዕቃ ማዘዣ ፎርም">
+                        </div>
+                        <div class="form-group">
+                            <label id="lblDynType">የመስክ ዓይነት (Field Type)</label>
+                            <select id="dynFieldType">
+                                <option value="text">ጽሑፍ (Text Input)</option>
+                                <option value="number">ቁጥር (Number)</option>
+                                <option value="date">ቀን (Date)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnGenForm" onclick="generateNewFormRole()">ፎርሙን አመንጭ (Generate)</button>
+                </div>
+
+                <div class="section-card">
+                    <h3 id="dynListTitle" data-key="dynListTitle">በአድሚኑ የተፈጠሩ አዳዲስ ፎርሞች ማሳያ</h3>
+                    <div id="dynamicFormsContainer" style="margin-top: 15px;">
+                        <p id="dynEmptyText" style="font-size: 11px; color: #93c5fd;">እስካሁን የተፈጠረ አዲስ ፎርም የለም።</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. ሪፖርቶች እና ህትመት (Admin Only) -->
+            <div id="reports" class="page-content">
+                <div class="section-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 id="repMainTitle" style="color: #60a5fa;" data-key="repMainTitle">📈 አጠቃላይ የሲስተሙ ሪፖርቶች እና ፕሪንት ማዕከል</h3>
+                        <button class="btn-primary" id="btnPrintRep" onclick="window.print()" data-key="btnPrintRep">📥 ሪፖርቱን አትም (Print PDF)</button>
+                    </div>
+
+                    <!-- የአሽከርካሪዎች እርካታ ማጠቃለያ -->
+                    <div style="margin-bottom: 25px; background: rgba(15,23,42,0.6); padding: 15px; border-radius: 12px; border: 1px solid rgba(59,130,246,0.3);">
+                        <h4 id="repSubTitle" style="color: #60a5fa; margin-bottom: 10px;" data-key="repSubTitle">የአሽከርካሪዎች የአገልግሎት እርካታ አጠቃላይ ሪፖርት (ለአድሚን)</h4>
+                        <div id="adminRatingReportSummary" style="font-size: 12px; color: #cbd5e1; display: flex; gap: 15px;"></div>
+                    </div>
+
+                    <!-- 1. የተጠቃሚዎች ዝርዝር ሪፖርት -->
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: #34d399; margin-bottom: 10px;">👤 የሲስተም ተጠቃሚዎች ዝርዝር ሪፖርት (System Users List)</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ተጠቃሚ ስም (Username)</th>
+                                    <th>ሙሉ ስም / መጠሪያ</th>
+                                    <th>የመለያ ሚና (Role)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="printUsersTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 2. የስራ ክፍሎች እና መምሪያዎች ሪፖርት -->
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="color: #60a5fa; margin-bottom: 10px;">🏢 የመምሪያዎች እና የስራ ክፍሎች ዝርዝር ሪፖርት (Departments & Sections)</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>መምሪያ / ዳይሬክቶሬት</th>
+                                    <th>የስራ ክፍል</th>
+                                    <th>የስራ ክፍል መሪ</th>
+                                    <th>ሰራተኞች</th>
+                                </tr>
+                            </thead>
+                            <tbody id="printDeptsTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- 3. የተሽከርካሪዎች ዝርዝር ሪፖርት -->
+                    <div>
+                        <h4 style="color: #fbbf24; margin-bottom: 10px;">🚗 የተሽከርካሪዎች እና ነጂዎች ዝርዝር ሪፖርት (Vehicles & Fleet List)</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>የተሽከርካሪ ታርጋ</th>
+                                    <th>የተመደበ ነጂ / ሰራተኞች</th>
+                                    <th>የተመደበለት መምሪያ/ሰራተኛ</th>
+                                    <th>የአሁኑ ሁኔታ (Status)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="printCarsTableBody"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>&copy; 2026 E-Fleet Command System. ሁሉም መብቶች በህግ የተጠበቁ ናቸው።</p>
+                <p id="footerAuth">የአዲስ አበባ ከተማ የመንግስት ንብረት አስተዳደር ባለስልጣን</p>
+            </div>
+            <div class="footer-links">
+                <a onclick="switchPage('dashboard', document.querySelector('.nav-item'))" data-key="ftLinkDash">ዳሽቦርድ</a>
+                <a onclick="switchPage('dispatch', document.querySelectorAll('.nav-item')[1])" data-key="ftLinkDisp">ስምሪት</a>
+                <a onclick="openSupportModal()" data-key="ftLinkSup">የቴክኒክ ድጋፍ (IT Support)</a>
+            </div>
+            <div class="footer-right">
+                <p>Version: 2.6 Enterprise Edition</p>
+                <p id="footerSecret" data-key="footerSecret">ሚስጥራዊ የውስጥ ስራ ማከናወኛ</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = 'am';
+
+        const dict = {
+            am: {
+                pageTitle: "E-Fleet Command - ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት",
+                logTitle: "E-Fleet Security Portal",
+                logSub: "የተጠቃሚ መለያ እና የይለፍ ቃል ያስገቡ",
+                lblUser: "የተጠቃሚ ስም (Username)",
+                lblPass: "የሚስጥር ቁጥር (Password)",
+                btnLoginAction: "ግባ (Authenticate & Login)",
+                loginError: "የተጠቃሚ ስም ወይም የይለፍ ቃል ስህተት ነው!",
+                supTitle: "የቴክኒክ ድጋፍ ማዕከል (IT Support)",
+                supDesc: "ለማንኛውም የሲስተም ወይም የይለፍ ቃል እክል ከታች ባሉት አድራሻዎች ያግኙን፡",
+                supPhone: "📞 ስልክ: +251-11-555-1234",
+                supEmail: "✉️ ኢሜይል: it-support@efleet.gov.et",
+                btnCloseModal: "ዝጋ",
+                brandSub: "ዘመናዊ የተሽከርካሪ ስምሪት አስተዳደር ስርዓት",
+                langBtn: "🇺🇸 English",
+                logout: "መውጫ",
+                navDash: "📊 ዳሽቦርድ",
+                navDispatch: "🚗 የስምሪት ጥያቄዎች",
+                navFuel: "⛽ ነዳጅ እና ጋራጅ ምዝገባ",
+                navMgmt: "⚙️ ምዝገባዎች እና ድልድል (Admin)",
+                navDyn: "✨ አዲስ ፎርም ማመንጫ (Admin)",
+                navRep: "📈 ሪፖርቶች እና ህትመት (Admin Only)",
+                slide1Title: "ዘመናዊ የተሽከርካሪ ስምሪት",
+                slide1Desc: "ለተቋምዎ ንቁ እና አስተማማኝ የትራንስፖርት አስተዳደር።",
+                slide2Title: "ፈጣን እና ቀልጣፋ ቁጥጥር",
+                slide2Desc: "በሎካልስቶሬጅ እና በባለብዙ ደረጃ ማጽደቂያ የተደገፈ።",
+                dashTitle: "📊 አጠቃላይ ማጠቃለያ ዳሽቦርድ",
+                statActiveTitle: "ንቁ ተሽከርካሪዎች",
+                statGarageTitle: "ጋራጅ ውስጥ ያሉ (ጥገና)",
+                statPendingTitle: "በሂደት ላይ ያሉ ጥያቄዎች",
+                reqFormHeading: "📝 አዲስ የተሽከርካሪ ስምሪት ጥያቄ ማቅረቢያ",
+                lblFrom: "መነሻ ቦታ",
+                lblTo: "መድረሻ ቦታ",
+                lblReason: "የጉዞ ምክንያት",
+                btnSubmitReq: "ጥያቄውን ላክ (Submit)",
+                tableTitleText: "የስምሪት ጥያቄዎች ዝርዝር እና ማጽደቂያ",
+                driverRatingHead: "👤 የእርስዎ (የነጂው) አጠቃላይ የአገልግሎት እርካታ ውጤቶች",
+                greenCardLbl: "🟢 አረንጓዴ ካርዶች (እጅግ በጣም ጥሩ)",
+                yellowCardLbl: "🟡 ቢጫ ካርዶች (መካከለኛ)",
+                redCardLbl: "🔴 ቀይ ካርዶች (ደካማ)",
+                fmCardTitleAdmin: "⛽ ተሽከርካሪ የነዳጅ ፍጆታ እና ጋራጅ ጥገና መመዝገቢያ",
+                fmCardTitleDriver: "⛽ የነዳጅ ወይም የጋራጅ ጥገና ማመልከቻ ማቅረቢያ (Request)",
+                fmSubmitAdmin: "መዝግብ እና ሪፖርት አድርግ",
+                fmSubmitDriver: "ማመልከቻውን ላክ (Submit Request)",
+                fmTableTitleAdmin: "የነዳጅ እና የጋራጅ ታሪክ መዝገብ",
+                fmTableTitleDriver: "የእርስዎ የነዳጅ እና ጋራጅ ማመልከቻዎች ታሪክ",
+                mgmtDeptHeading: "🏢 መምሪያዎች፣ የስራ ክፍሎች እና ሰራተኞች ምዝገባ",
+                lblDeptName: "የመምሪያ ወይም የዳይሬክቶሬት ስም",
+                lblStaffName: "የኃላፊው/ሰራተኛው ስም",
+                btnRegDept: "መምሪያ እና ሰራተኛ መዝግብ",
+                mgmtDriverHeading: "🚗 🚙 ነጂዎች እና ተሽከርካሪዎች ምዝገባ (Admin)",
+                lblDriverName: "የነጂው ሙሉ ስም",
+                lblCarPlate: "የተሽከርካሪ ታርጋ ቁጥር",
+                lblCarStatus: "የተሽከርካሪው የመጀመሪያ ሁኔታ (Status)",
+                btnRegCar: "ነጂ እና መኪና አክል",
+                assignTitle: "🔗 ነጂውን / መኪናውን ለተወሰነ መምሪያ ወይም ሰራተኛ መመደብ (Assign Fleet)",
+                lblAssignDriver: "ነጂ/መኪና ይምረጡ",
+                lblAssignDept: "የሚመደብለት መምሪያ ወይም ሰራተኛ",
+                btnAssignAction: "ነጂውን መምሪያው ላይ መድብ (Assign)",
+                mgmtCarListTitle: "📋 በሲስተሙ ውስጥ ያሉ ነጂዎች፣ ተሽከርካሪዎች እና የድልድል ሁኔታ",
+                dynHeading: "✨ አዲስ ፎርማት ማመንጫ (Admin Dynamic Generator)",
+                lblDynName: "የአዲሱ ፎርም ስም",
+                lblDynType: "የመስክ ዓይነት (Field Type)",
+                btnGenForm: "ፎርሙን አመንጭ (Generate)",
+                dynListTitle: "በአድሚኑ የተፈጠሩ አዳዲስ ፎርሞች ማሳያ",
+                dynEmptyText: "እስካሁን የተፈጠረ አዲስ ፎርም የለም።",
+                repMainTitle: "📈 አጠቃላይ የሲስተሙ ሪፖርቶች እና ፕሪንት ማዕከል",
+                repSubTitle: "የአሽከርካሪዎች የአገልግሎት እርካታ አጠቃላይ ሪፖርት (ለአድሚን)",
+                btnPrintRep: "📥 ሪፖርቱን አትም (Print PDF)",
+                footerAuth: "የአዲስ አበባ ከተማ የመንግስት ንብረት አስተዳደር ባለስልጣን",
+                ftLinkDash: "ዳሽቦርድ",
+                ftLinkDisp: "ስምሪት",
+                ftLinkSup: "የቴክኒክ ድጋፍ (IT Support)",
+                footerSecret: "ሚስጥራዊ የውስጥ ስራ ማከናወኛ"
+            },
+            en: {
+                pageTitle: "E-Fleet Command - Modern Fleet Management System",
+                logTitle: "E-Fleet Security Portal",
+                logSub: "Enter your username and password",
+                lblUser: "Username",
+                lblPass: "Password",
+                btnLoginAction: "Authenticate & Login",
+                loginError: "Invalid username or password!",
+                supTitle: "IT Support Center",
+                supDesc: "For any system or password issues, contact us via:",
+                supPhone: "📞 Phone: +251-11-555-1234",
+                supEmail: "✉️ Email: it-support@efleet.gov.et",
+                btnCloseModal: "Close",
+                brandSub: "Modern Fleet Management System",
+                langBtn: "🇪🇹 አማርኛ",
+                logout: "Logout",
+                navDash: "📊 Dashboard",
+                navDispatch: "🚗 Dispatch Requests",
+                navFuel: "⛽ Fuel & Maintenance",
+                navMgmt: "⚙️ Management & Assignment (Admin)",
+                navDyn: "✨ Dynamic Forms (Admin)",
+                navRep: "📈 Reports & Print (Admin Only)",
+                slide1Title: "Modern Fleet Operations",
+                slide1Desc: "Active and reliable transport management for your institution.",
+                slide2Title: "Fast and Efficient Control",
+                slide2Desc: "Powered by local storage and multi-tier approval workflows.",
+                dashTitle: "📊 Overview Dashboard",
+                statActiveTitle: "Active Vehicles",
+                statGarageTitle: "In Garage (Maintenance)",
+                statPendingTitle: "Pending Requests",
+                reqFormHeading: "📝 New Vehicle Dispatch Request",
+                lblFrom: "Departure Location",
+                lblTo: "Destination Location",
+                lblReason: "Reason for Travel",
+                btnSubmitReq: "Submit Request",
+                tableTitleText: "Dispatch Requests List & Approvals",
+                driverRatingHead: "👤 Your Service Satisfaction Ratings (Driver)",
+                greenCardLbl: "🟢 Green Cards (Excellent)",
+                yellowCardLbl: "🟡 Yellow Cards (Moderate)",
+                redCardLbl: "🔴 Red Cards (Poor)",
+                fmCardTitleAdmin: "⛽ Vehicle Fuel Consumption & Garage Maintenance Log",
+                fmCardTitleDriver: "⛽ Fuel or Maintenance Request Application",
+                fmSubmitAdmin: "Record & Report",
+                fmSubmitDriver: "Submit Request Application",
+                fmTableTitleAdmin: "Fuel and Garage History Records",
+                fmTableTitleDriver: "Your Fuel & Garage Requests History",
+                mgmtDeptHeading: "🏢 Departments, Sections and Staff Registration",
+                lblDeptName: "Department or Directorate Name",
+                lblStaffName: "Head / Staff Name",
+                btnRegDept: "Register Dept & Staff",
+                mgmtDriverHeading: "🚗 🚙 Drivers and Cars Registration (Admin)",
+                lblDriverName: "Driver Full Name",
+                lblCarPlate: "Vehicle License Plate",
+                lblCarStatus: "Initial Vehicle Status",
+                btnRegCar: "Add Driver & Car",
+                assignTitle: "🔗 Assign Fleet Driver/Car to Department or Staff",
+                lblAssignDriver: "Select Driver/Car",
+                lblAssignDept: "Select Department or Staff",
+                btnAssignAction: "Assign Fleet to Department",
+                mgmtCarListTitle: "📋 List of Registered Drivers, Vehicles and Assignments",
+                dynHeading: "✨ Admin Dynamic Form Generator",
+                lblDynName: "New Form Name",
+                lblDynType: "Field Type",
+                btnGenForm: "Generate Form",
+                dynListTitle: "Admin Created Dynamic Forms Display",
+                dynEmptyText: "No custom forms created yet.",
+                repMainTitle: "📈 Overall System Reports & Print Center",
+                repSubTitle: "Driver Service Satisfaction Summary Report (Admin)",
+                btnPrintRep: "Print PDF Report",
+                footerAuth: "Addis Ababa City Government Property Administration Authority",
+                ftLinkDash: "Dashboard",
+                ftLinkDisp: "Dispatch",
+                ftLinkSup: "IT Support",
+                footerSecret: "Confidential Internal Operation"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'am') ? 'en' : 'am';
+            document.getElementById('htmlRoot').setAttribute('lang', currentLang);
+            document.getElementById('langSwitchBtn').innerText = dict[currentLang].langBtn;
+            document.getElementById('pageTitle').innerText = dict[currentLang].pageTitle;
+            document.getElementById('logTitle').innerText = dict[currentLang].logTitle;
+            document.getElementById('logSub').innerText = dict[currentLang].logSub;
+            document.getElementById('lblUser').innerText = dict[currentLang].lblUser;
+            document.getElementById('lblPass').innerText = dict[currentLang].lblPass;
+            document.getElementById('btnLoginAction').innerText = dict[currentLang].btnLoginAction;
+            document.getElementById('loginError').innerText = dict[currentLang].loginError;
+            document.getElementById('supTitle').innerText = dict[currentLang].supTitle;
+            document.getElementById('supDesc').innerText = dict[currentLang].supDesc;
+            document.getElementById('supPhone').innerText = dict[currentLang].supPhone;
+            document.getElementById('supEmail').innerText = dict[currentLang].supEmail;
+            document.getElementById('btnCloseModal').innerText = dict[currentLang].btnCloseModal;
+            document.getElementById('brandSub').innerText = dict[currentLang].brandSub;
+            document.getElementById('btnLogout').innerText = dict[currentLang].logout;
+            
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(dict[currentLang][key]) el.innerText = dict[currentLang][key];
+            });
+
+            document.getElementById('reqFormHeading').innerText = dict[currentLang].reqFormHeading;
+            document.getElementById('lblFrom').innerText = dict[currentLang].lblFrom;
+            document.getElementById('lblTo').innerText = dict[currentLang].lblTo;
+            document.getElementById('lblReason').innerText = dict[currentLang].lblReason;
+            document.getElementById('btnSubmitReq').innerText = dict[currentLang].btnSubmitReq;
+            document.getElementById('tableTitleText').innerText = dict[currentLang].tableTitleText;
+            document.getElementById('driverRatingHead').innerText = dict[currentLang].driverRatingHead;
+            document.getElementById('mgmtDeptHeading').innerText = dict[currentLang].mgmtDeptHeading;
+            document.getElementById('lblDeptName').innerText = dict[currentLang].lblDeptName;
+            document.getElementById('lblStaffName').innerText = dict[currentLang].lblStaffName;
+            document.getElementById('btnRegDept').innerText = dict[currentLang].btnRegDept;
+            document.getElementById('mgmtDriverHeading').innerText = dict[currentLang].mgmtDriverHeading;
+            document.getElementById('lblDriverName').innerText = dict[currentLang].lblDriverName;
+            document.getElementById('lblCarPlate').innerText = dict[currentLang].lblCarPlate;
+            document.getElementById('lblCarStatus').innerText = dict[currentLang].lblCarStatus;
+            document.getElementById('btnRegCar').innerText = dict[currentLang].btnRegCar;
+            document.getElementById('assignTitle').innerText = dict[currentLang].assignTitle;
+            document.getElementById('lblAssignDriver').innerText = dict[currentLang].lblAssignDriver;
+            document.getElementById('lblAssignDept').innerText = dict[currentLang].lblAssignDept;
+            document.getElementById('btnAssignAction').innerText = dict[currentLang].btnAssignAction;
+            document.getElementById('mgmtCarListTitle').innerText = dict[currentLang].mgmtCarListTitle;
+            document.getElementById('dynHeading').innerText = dict[currentLang].dynHeading;
+            document.getElementById('lblDynName').innerText = dict[currentLang].lblDynName;
+            document.getElementById('lblDynType').innerText = dict[currentLang].lblDynType;
+            document.getElementById('btnGenForm').innerText = dict[currentLang].btnGenForm;
+            document.getElementById('dynEmptyText').innerText = dict[currentLang].dynEmptyText;
+            document.getElementById('footerAuth').innerText = dict[currentLang].footerAuth;
+
+            if (currentUser) {
+                if(currentUser.role === 'admin') {
+                    document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleAdmin;
+                    document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitAdmin;
+                    document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleAdmin;
+                } else if(currentUser.role === 'driver') {
+                    document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleDriver;
+                    document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitDriver;
+                    document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleDriver;
+                }
+            }
+            renderRequestsTable();
+            renderDriverAssignments();
+        }
+
+        let currentSlideIndex = 0;
+        function autoSlideShow() {
+            const slides = document.querySelectorAll('.slide');
+            if(slides.length === 0) return;
+            slides.forEach(s => s.classList.remove('active-slide'));
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            slides[currentSlideIndex].classList.add('active-slide');
+        }
+        setInterval(autoSlideShow, 4000);
+
+        function openSupportModal() { document.getElementById('supportModal').style.display = 'flex'; }
+        function closeSupportModal() { document.getElementById('supportModal').style.display = 'none'; }
+
+        function getUsersDB() {
+            let defaultUsers = {
+                admin: { pass: 'Admin@123', name: 'ብርሃኑ ብያድጌ', role: 'admin', roleText: 'System Admin' },
+                dept: { pass: 'Dept@123', name: 'የመምሪያ ኃላፊ', role: 'dept', roleText: 'Department Head' },
+                driver: { pass: 'Driver@123', name: 'ዋና ነጂ', role: 'driver', roleText: 'Fleet Driver' },
+                staff: { pass: 'Staff@123', name: 'መደበኛ ሰራተኛ', role: 'staff', roleText: 'Staff Member' }
+            };
+            let customUsers = JSON.parse(localStorage.getItem('efleet_custom_users')) || {};
+            return { ...defaultUsers, ...customUsers };
+        }
+
+        let currentUser = null;
+        let selectedLoginRole = 'admin';
+
+        function switchLoginRole(role, element) {
+            selectedLoginRole = role;
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active-tab'));
+            if(element) element.classList.add('active-tab');
+            
+            const stdGroup = document.getElementById('standardUserGroup');
+            const dropGroup = document.getElementById('dropdownSelectGroup');
+            const lblDropdownSelect = document.getElementById('lblDropdownSelect');
+
+            if(role === 'driver' || role === 'staff' || role === 'dept') {
+                stdGroup.style.display = 'none';
+                dropGroup.style.display = 'block';
+                populateLoginDropdown(role);
+                if(role === 'driver') lblDropdownSelect.innerText = currentLang === 'am' ? 'የነጂ ስም ይምረጡ' : 'Select Driver Name';
+                else if(role === 'staff') lblDropdownSelect.innerText = currentLang === 'am' ? 'የሰራተኛ ስም ይምረጡ' : 'Select Staff Name';
+                else if(role === 'dept') lblDropdownSelect.innerText = currentLang === 'am' ? 'የመምሪያ ስም ይምረጡ' : 'Select Department Name';
+                document.getElementById('loginPass').value = '';
+            } else {
+                stdGroup.style.display = 'block';
+                dropGroup.style.display = 'none';
+                document.getElementById('loginUser').value = role;
+                document.getElementById('loginPass').value = '';
+            }
+        }
+
+        function populateLoginDropdown(roleType) {
+            const usersDB = getUsersDB();
+            const dropSelect = document.getElementById('loginDropdownSelect');
+            dropSelect.innerHTML = `<option value="">-- መለያ ይምረጡ --</option>`;
+            for (let username in usersDB) {
+                if (usersDB[username].role === roleType) {
+                    dropSelect.innerHTML += `<option value="${username}">${usersDB[username].name} (${username})</option>`;
+                }
+            }
+        }
+
+        function onLoginDropdownSelect() {
+            const selectedUsername = document.getElementById('loginDropdownSelect').value;
+            document.getElementById('loginUser').value = selectedUsername;
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value.trim();
+            const errEl = document.getElementById('loginError');
+            const usersDB = getUsersDB();
+
+            if((selectedLoginRole === 'driver' || selectedLoginRole === 'staff' || selectedLoginRole === 'dept') && !u) {
+                errEl.innerText = currentLang === 'am' ? 'እባክዎ ከዝርዝሩ ውስጥ መለያዎን ይምረጡ!' : 'Please select your account from the list!';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            if(usersDB[u] && usersDB[u].pass === p) {
+                currentUser = usersDB[u];
+                localStorage.setItem('efleet_current_user', JSON.stringify(currentUser));
+                document.getElementById('loginOverlay').style.display = 'none';
+                errEl.style.display = 'none';
+                initSessionUI();
+            } else {
+                errEl.innerText = dict[currentLang].loginError;
+                errEl.style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('efleet_current_user');
+            currentUser = null;
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginOverlay').style.display = 'flex';
+        }
+
+        function getStoredData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+        function setStoredData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+        if(!localStorage.getItem('efleet_requests')) {
+            setStoredData('efleet_requests', [{ id: 1, sender: 'መደበኛ ሰራተኛ', driverName: 'ዋና ነጂ (ኮድ 2 - A42)', carPlate: 'ኮድ 2 - A42', from: 'ዋና መ/ቤት', to: 'ቦሌ', reason: 'ስራ', status: 'approved', driverAccepted: true, rating: null }]);
+        }
+        if(!localStorage.getItem('efleet_cars')) {
+            setStoredData('efleet_cars', [{ id: 1, car: 'ኮድ 2 - A42', driver: 'ዋና ነጂ እና ረዳት ሰራተኞች', assignedTo: 'የህዝብ ግንኙነት (ብርሃኑ ብያድጌ)', status: 'Active' }]);
+        }
+        if(!localStorage.getItem('efleet_fuel_maint')) setStoredData('efleet_fuel_maint', []);
+        if(!localStorage.getItem('efleet_dyn_forms')) setStoredData('efleet_dyn_forms', []);
+        if(!localStorage.getItem('efleet_departments')) {
+            setStoredData('efleet_departments', [{ id: 101, dept: 'የህዝብ ግንኙነት ዳይሬክቶሬት', section: 'የሚዲያ ክፍል', leader: 'ብርሃኑ ብያድጌ', staffList: 'አበበ (0911223344), ከበደ (0922334455)' }]);
+        }
+
+        function initSessionUI() {
+            const savedUser = localStorage.getItem('efleet_current_user');
+            if(savedUser) currentUser = JSON.parse(savedUser);
+            if(!currentUser) {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                return;
+            }
+
+            document.getElementById('displayUserName').innerText = currentUser.name;
+            document.getElementById('displayUserRole').innerText = currentUser.roleText;
+
+            const navFuelMaint = document.getElementById('navFuelMaint');
+            const navManagement = document.getElementById('navManagement');
+            const navDynamicMenu = document.getElementById('navDynamicMenu');
+            const navReports = document.getElementById('navReports');
+            const newRequestCard = document.getElementById('newRequestCard');
+            const driverRatingSummaryCard = document.getElementById('driverRatingSummaryCard');
+            const driverAssignmentCard = document.getElementById('driverAssignmentCard');
+
+            if(currentUser.role === 'admin') {
+                navFuelMaint.style.display = 'flex';
+                navManagement.style.display = 'flex';
+                navDynamicMenu.style.display = 'flex';
+                navReports.style.display = 'flex';
+                if(newRequestCard) newRequestCard.style.display = 'block';
+                if(driverRatingSummaryCard) driverRatingSummaryCard.style.display = 'none';
+                if(driverAssignmentCard) driverAssignmentCard.style.display = 'none';
+                
+                document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleAdmin;
+                document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitAdmin;
+                document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleAdmin;
+                document.getElementById('fmTableHeader').innerHTML = currentLang === 'am' ? `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ማስታወሻ</th>` : `<th>Plate</th><th>Category</th><th>Amount/Details</th><th>Note</th>`;
+
+            } else if(currentUser.role === 'driver') {
+                navFuelMaint.style.display = 'flex'; 
+                navManagement.style.display = 'none';
+                navDynamicMenu.style.display = 'none';
+                navReports.style.display = 'none';
+                if(newRequestCard) newRequestCard.style.display = 'none'; 
+                if(driverRatingSummaryCard) driverRatingSummaryCard.style.display = 'block';
+                if(driverAssignmentCard) driverAssignmentCard.style.display = 'block';
+
+                document.getElementById('fmCardTitle').innerText = dict[currentLang].fmCardTitleDriver;
+                document.getElementById('fmSubmitBtn').innerText = dict[currentLang].fmSubmitDriver;
+                document.getElementById('fmTableTitle').innerText = dict[currentLang].fmTableTitleDriver;
+                document.getElementById('fmTableHeader').innerHTML = currentLang === 'am' ? `<th>ታርጋ</th><th>ምድብ</th><th>መጠን/ዝርዝር</th><th>ሁኔታ (Status)</th>` : `<th>Plate</th><th>Category</th><th>Amount/Details</th><th>Status</th>`;
+
+            } else {
+                navFuelMaint.style.display = 'none';
+                navManagement.style.display = 'none';
+                navDynamicMenu.style.display = 'none';
+                navReports.style.display = 'none';
+                if(newRequestCard) newRequestCard.style.display = 'block';
+                if(driverRatingSummaryCard) driverRatingSummaryCard.style.display = 'none';
+                if(driverAssignmentCard) driverAssignmentCard.style.display = 'none';
+            }
+
+            refreshDashboardStats();
+            renderRequestsTable();
+            renderDriverAssignments();
+            renderFuelMaintenanceTable();
+            populateCarDropdown();
+            populateAssignmentDropdowns();
+            renderDynamicForms();
+            renderAdminAndDriverRatings();
+            renderAdminCarsTable();
+            renderAdminDepartmentsTable();
+            renderPrintableReportTables();
+        }
+
+        function switchPage(pageId, element) {
+            if((pageId === 'reports' || pageId === 'management' || pageId === 'dynamicFormsPage') && currentUser && currentUser.role !== 'admin') {
+                alert(currentLang === 'am' ? 'ይህን ገጽ ማየት የሚችሉት አድሚኖች ብቻ ናቸው!' : 'Only administrators can view this page!');
+                return;
+            }
+            if(pageId === 'fuelMaintenance' && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'driver') {
+                alert(currentLang === 'am' ? 'ይህን ገጽ ማየት ፈቃድ የለዎትም!' : 'You do not have permission to view this page!');
+                return;
+            }
+
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active-page'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active-page');
+            if(element) element.classList.add('active');
+
+            if(pageId === 'reports') {
+                renderPrintableReportTables();
+            }
+        }
+
+        function renderPrintableReportTables() {
+            if(!currentUser || currentUser.role !== 'admin') return;
+
+            const usersDB = getUsersDB();
+            const usersTbody = document.getElementById('printUsersTableBody');
+            if(usersTbody) {
+                usersTbody.innerHTML = '';
+                for(let username in usersDB) {
+                    let u = usersDB[username];
+                    usersTbody.innerHTML += `
+                        <tr>
+                            <td><b>${username}</b></td>
+                            <td>${u.name}</td>
+                            <td><span class="badge badge-approved">${u.roleText || u.role}</span></td>
+                        </tr>
+                    `;
+                }
+            }
+
+            const depts = getStoredData('efleet_departments');
+            const deptsTbody = document.getElementById('printDeptsTableBody');
+            if(deptsTbody) {
+                deptsTbody.innerHTML = '';
+                depts.forEach(d => {
+                    deptsTbody.innerHTML += `
+                        <tr>
+                            <td><b>${d.dept}</b></td>
+                            <td>${d.section || '-'}</td>
+                            <td style="color: #34d399; font-weight: 600;">${d.leader}</td>
+                            <td style="color: #93c5fd;">${d.staffList || '-'}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const cars = getStoredData('efleet_cars');
+            const carsTbody = document.getElementById('printCarsTableBody');
+            if(carsTbody) {
+                carsTbody.innerHTML = '';
+                cars.forEach(c => {
+                    let badgeClass = c.status === 'Active' ? 'badge-approved' : 'badge-pending';
+                    carsTbody.innerHTML += `
+                        <tr>
+                            <td><b>${c.car}</b></td>
+                            <td>${c.driver || (currentLang === 'am' ? 'ያልተመደበ' : 'Unassigned')}</td>
+                            <td><span style="color: #60a5fa;">${c.assignedTo || (currentLang === 'am' ? 'ገና አልተመደበም' : 'Unassigned')}</span></td>
+                            <td><span class="badge ${badgeClass}">${c.status}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function submitRequest() {
+            const from = document.getElementById('reqFrom').value;
+            const to = document.getElementById('reqTo').value;
+            const reason = document.getElementById('reqReason').value;
+            if(!from || !to) { alert(currentLang === 'am' ? 'መነሻ እና መድረሻ ይሙሉ' : 'Please fill departure and destination'); return; }
+
+            let reqs = getStoredData('efleet_requests');
+            reqs.push({ id: Date.now(), sender: currentUser.name, driverName: 'ገና አልተመደበም', carPlate: '', from, to, reason, status: 'pending_dept', driverAccepted: false, rating: null });
+            setStoredData('efleet_requests', reqs);
+            alert(currentLang === 'am' ? 'ጥያቄው ተልኳል! አሁን ለመምሪያ ኃላፊው ማጽደቂያ ቀርቧል።' : 'Request sent! Now pending department head approval.');
+            document.getElementById('reqFrom').value = '';
+            document.getElementById('reqTo').value = '';
+            document.getElementById('reqReason').value = '';
+            renderRequestsTable();
+            refreshDashboardStats();
+        }
+
+        function renderRequestsTable() {
+            const tbody = document.getElementById('requestTableBody');
+            const headerRow = document.getElementById('tableHeaderRow');
+            const reqs = getStoredData('efleet_requests');
+            const cars = getStoredData('efleet_cars');
+            tbody.innerHTML = '';
+            let pendingCount = 0;
+
+            let displayReqs = reqs;
+            if(currentUser && currentUser.role === 'driver') {
+                displayReqs = reqs.filter(r => r.driverName && (r.driverName.includes(currentUser.name) || r.driverName.includes(currentUser.role)));
+            }
+
+            if(currentUser && currentUser.role === 'admin') {
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>የተመደበ ሾፌር/ረዳቶች/መኪና</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>እርምጃ / ማጽደቂያ</th>` : `<th>Sender</th><th>Assigned Driver/Staff/Car</th><th>Route</th><th>Reason</th><th>Status</th><th>Action / Approval</th>`;
+            } else if(currentUser && currentUser.role === 'driver') {
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>የምደባ ማረጋገጫ</th>` : `<th>Sender</th><th>Route</th><th>Reason</th><th>Status</th><th>Assignment Status</th>`;
+            } else {
+                headerRow.innerHTML = currentLang === 'am' ? `<th>ጠያቂ</th><th>የተመደበ ሾፌር/ረዳቶች/መኪና</th><th>መነሻ - መድረሻ</th><th>ምክንያት</th><th>የአሁኑ ደረጃ (Status)</th><th>እርምጃ / እርካታ ግምገማ</th>` : `<th>Sender</th><th>Assigned Driver/Staff/Car</th><th>Route</th><th>Reason</th><th>Status</th><th>Action / Rating</th>`;
+            }
+
+            displayReqs.forEach(req => {
+                if(req.status !== 'approved') pendingCount++;
+                
+                let badge = '';
+                let action = '';
+
+                if(req.status === 'pending_dept') {
+                    badge = `<span class="badge badge-pending">${currentLang === 'am' ? 'መምሪያ ማጽደቅ ይጠብቃል' : 'Pending Dept Approval'}</span>`;
+                    if(currentUser.role === 'dept') {
+                        action = `<button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByDept(${req.id})">${currentLang === 'am' ? 'መምሪያው ያጸድቅ' : 'Approve by Dept'}</button>`;
+                    } else {
+                        action = `<span style="font-size:11px; color:#fbbf24;">${currentLang === 'am' ? 'ማጽደቅ ይጠብቃል' : 'Pending Approval'}</span>`;
+                    }
+                } else if(req.status === 'pending_admin') {
+                    badge = `<span class="badge badge-pending" style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4);">${currentLang === 'am' ? 'አድሚን ማጽደቅ ይጠብቃል' : 'Pending Admin Approval'}</span>`;
+                    if(currentUser.role === 'admin') {
+                        let carOptions = `<option value="">-- ${currentLang === 'am' ? 'መኪና እና ሾፌር/ረዳቶች ይምረጡ' : 'Select Car & Drivers'} --</option>`;
+                        cars.forEach(c => {
+                            carOptions += `<option value="${c.driver || c.car} (${c.car})" data-plate="${c.car}">${c.car} - ሰራተኞች: ${c.driver || 'ያልተመደበ'}</option>`;
+                        });
+
+                        action = `
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <select id="select_car_${req.id}" style="padding: 4px; background: #0f172a; color: #fff; border: 1px solid #3b82f6; border-radius: 6px; font-size: 11px;">
+                                    ${carOptions}
+                                </select>
+                                <button class="btn-primary" style="padding:4px 8px; font-size:10px;" onclick="approveByAdminWithFleet(${req.id})">${currentLang === 'am' ? 'መኪና እና ሰራተኞች መድብ' : 'Assign & Approve'}</button>
+                            </div>
+                        `;
+                    } else {
+                        action = `<span style="font-size:11px; color:#60a5fa;">${currentLang === 'am' ? 'የአድሚን ማጽደቅ በመველየት ላይ' : 'Awaiting Admin'}</span>`;
+                    }
+                } else {
+                    badge = `<span class="badge badge-approved">${currentLang === 'am' ? 'ሙሉ በሙሉ ጸድቋል' : 'Fully Approved'}</span>`;
+                    
+                    if(currentUser && currentUser.role === 'driver') {
+                        if(req.driverAccepted) {
+                            action = `<span style="color: #34d399; font-weight: bold; font-size: 11px;">✅ ${currentLang === 'am' ? 'ተቀብለዋል (Accepted)' : 'Accepted'}</span>`;
+                        } else {
+                            action = `<button class="btn-primary" style="padding: 4px 10px; font-size: 11px; background: #10b981;" onclick="acceptDriverAssignment(${req.id})">${currentLang === 'am' ? 'ምደባውን ተቀበል' : 'Accept Assignment'}</button>`;
+                        }
+                    } else if(currentUser && (currentUser.role === 'staff' || currentUser.role === 'dept')) {
+                        if(req.rating) {
+                            let rateText = req.rating === 'green' ? (currentLang === 'am' ? '🟢 አረንጓዴ (እጅግ በጣም ጥሩ)' : '🟢 Green (Excellent)') : (req.rating === 'yellow' ? (currentLang === 'am' ? '🟡 ቢጫ (መካከለኛ)' : '🟡 Yellow (Moderate)') : (currentLang === 'am' ? '🔴 ቀይ (ደካማ)' : '🔴 Red (Poor)'));
+                            let rateColor = req.rating === 'green' ? '#10b981' : (req.rating === 'yellow' ? '#f59e0b' : '#ef4444');
+                            action = `<span style="font-size:11px; color:${rateColor}; font-weight:bold;">${currentLang === 'am' ? 'ግምገማ' : 'Rating'}: ${rateText}</span>`;
+                        } else {
+                            action = `
+                                <div style="font-size:11px; margin-bottom:4px; color:#93c5fd;">${currentLang === 'am' ? 'አገልግሎቱን ይገምግሙ:' : 'Rate service:'}</div>
+                                <div class="rating-cards">
+                                    <button class="rate-btn rate-green" onclick="rateDriver(${req.id}, 'green')">🟢</button>
+                                    <button class="rate-btn rate-yellow" onclick="rateDriver(${req.id}, 'yellow')">🟡</button>
+                                    <button class="rate-btn rate-red" onclick="rateDriver(${req.id}, 'red')">🔴</button>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        let acceptStatusText = req.driverAccepted ? (currentLang === 'am' ? 'ነጂው እና ሰራተኞቹ ተቀብለውታል' : 'Accepted by Staff/Driver') : (currentLang === 'am' ? 'ማረጋገጫ ይጠብቃል' : 'Pending Acceptance');
+                        action = `<span style="font-size:11px; color:#34d399;">${acceptStatusText}</span>`;
+                    }
+                }
+
+                if(currentUser && currentUser.role === 'driver') {
+                    tbody.innerHTML += `<tr><td>${req.sender}</td><td>${req.from} - ${req.to}</td><td>${req.reason}</td><td>${badge}</td><td>${action}</td></tr>`;
+                } else {
+                    tbody.innerHTML += `<tr><td>${req.sender}</td><td><span style="color:#34d399; font-weight:600;">${req.driverName || (currentLang === 'am' ? 'ገና አልተመደበም' : 'Not Assigned')}</span></td><td>${req.from} - ${req.to}</td><td>${req.reason}</td><td>${badge}</td><td>${action}</td></tr>`;
+                }
+            });
+
+            document.getElementById('statPendingReqs').innerText = pendingCount;
+            document.getElementById('notifBadgeCount').innerText = pendingCount;
+            renderAdminAndDriverRatings();
+        }
+
+        function acceptDriverAssignment(id) {
+            let reqs = getStoredData('efleet_requests');
+            reqs = reqs.map(r => { if(r.id === id) r.driverAccepted = true; return r; });
+            setStoredData('efleet_requests', reqs);
+            renderRequestsTable();
+            renderDriverAssignments();
+            alert(currentLang === 'am' ? 'ምደባውን በተሳካ ሁኔታ ተቀብለዋል!' : 'Assignment successfully accepted!');
+        }
+
+        function renderDriverAssignments() {
+            const tbody = document.getElementById('driverAssignmentTableBody');
+            if(!tbody || !currentUser || currentUser.role !== 'driver') return;
+            const reqs = getStoredData('efleet_requests');
+            tbody.innerHTML = '';
+
+            let assignedReqs = reqs.filter(r => r.driverName && (r.driverName.includes(currentUser.name) || r.driverName.includes(currentUser.role)) && r.status === 'approved');
+            
+            if(assignedReqs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #93c5fd; padding: 15px;">${currentLang === 'am' ? 'እስካሁን የተመደበልዎ አዲስ ስምሪት የለም።' : 'No assignments for you yet.'}</td></tr>`;
+                return;
+            }
+
+            assignedReqs.forEach(r => {
+                let statusBadge = r.driverAccepted ? 
+                    `<span class="badge badge-approved">✅ ${currentLang === 'am' ? 'ተቀብያለሁ (Accepted)' : 'Accepted'}</span>` : 
+                    `<span class="badge badge-pending">⏳ ${currentLang === 'am' ? 'ማረጋገጫ ይጠብቃል' : 'Pending Acceptance'}</span>`;
+                
+                let actionBtn = r.driverAccepted ? 
+                    `<span style="color: #34d399; font-size: 11px;">${currentLang === 'am' ? 'ጉዞውን ለማከናወን ዝግጁ' : 'Ready for trip'}</span>` : 
+                    `<button class="btn-primary" style="padding: 5px 12px; font-size: 11px; background: #10b981;" onclick="acceptDriverAssignment(${r.id})">${currentLang === 'am' ? 'ምደባውን ተቀበል (Accept)' : 'Accept'}</button>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${r.from}</b> ➔ <b>${r.to}</b></td>
+                        <td style="color: #60a5fa;">${r.carPlate || 'ተሽከርካሪ'}</td>
+                        <td>${statusBadge}</td>
+                        <td>${actionBtn}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function rateDriver(id, ratingType) {
+            let reqs = getStoredData('efleet_requests');
+            reqs = reqs.map(r => { if(r.id === id) r.rating = ratingType; return r; });
+            setStoredData('efleet_requests', reqs);
+            renderRequestsTable();
+            alert(currentLang === 'am' ? 'ለሰጡት ግምገማ እናመሰግናለን!' : 'Thank you for your rating!');
+        }
+
+        function renderAdminAndDriverRatings() {
+            const reqs = getStoredData('efleet_requests');
+            let gCount = 0, yCount = 0, rCount = 0;
+
+            reqs.forEach(r => {
+                if(r.rating === 'green') gCount++;
+                if(r.rating === 'yellow') yCount++;
+                if(r.rating === 'red') rCount++;
+            });
+
+            document.getElementById('countGreen').innerText = gCount;
+            document.getElementById('countYellow').innerText = yCount;
+            document.getElementById('countRed').innerText = rCount;
+
+            const adminReportEl = document.getElementById('adminRatingReportSummary');
+            if(adminReportEl) {
+                adminReportEl.innerHTML = `
+                    <div style="flex: 1; background: rgba(16,185,129,0.1); padding: 10px; border-radius: 8px; border: 1px solid #10b981;">🟢 ${currentLang === 'am' ? 'አረንጓዴ (ጥሩ)' : 'Green (Good)'}: <b>${gCount}</b></div>
+                    <div style="flex: 1; background: rgba(245,158,11,0.1); padding: 10px; border-radius: 8px; border: 1px solid #f59e0b;">🟡 ${currentLang === 'am' ? 'ቢጫ (መካከለኛ)' : 'Yellow (Moderate)'}: <b>${yCount}</b></div>
+                    <div style="flex: 1; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 8px; border: 1px solid #ef4444;">🔴 ${currentLang === 'am' ? 'ቀይ (ደካማ)' : 'Red (Poor)'}: <b>${rCount}</b></div>
+                `;
+            }
+        }
+
+        function approveByDept(id) {
+            let reqs = getStoredData('efleet_requests');
+            reqs = reqs.map(r => { if(r.id === id) r.status = 'pending_admin'; return r; });
+            setStoredData('efleet_requests', reqs);
+            renderRequestsTable();
+            refreshDashboardStats();
+            alert(currentLang === 'am' ? 'መምሪያው አጸድቆታል! አሁን ለአድሚን የመጨረሻ ማጽደቂያ ተልኳል።' : 'Approved by department! Sent to admin for final approval.');
+        }
+
+        function approveByAdminWithFleet(id) {
+            const selectEl = document.getElementById(`select_car_${id}`);
+            const selectedFleet = selectEl ? selectEl.value : '';
+
+            if(!selectedFleet) {
+                alert(currentLang === 'am' ? 'እባክዎ ለዚህ ጥያቄ የሚሆን ተሽከርካሪ እና ሰራተኞች ይምረጡ!' : 'Please select a car and staff for this request!');
+                return;
+            }
+
+            let reqs = getStoredData('efleet_requests');
+            reqs = reqs.map(r => { 
+                if(r.id === id) {
+                    r.status = 'approved';
+                    r.driverName = selectedFleet;
+                    r.carPlate = selectedFleet;
+                    r.driverAccepted = false;
+                } 
+                return r; 
+            });
+            setStoredData('efleet_requests', reqs);
+            renderRequestsTable();
+            refreshDashboardStats();
+            alert(currentLang === 'am' ? 'ተሽከርካሪው እና ሰራተኞቹ ተመድቦ ጥያቄው ጸድቋል!' : 'Fleet and staff assigned and approved!');
+        }
+
+        // 🏢 መምሪያዎችን መመዝገብ፣ ማስተካከል (Update)
+        function registerDepartmentAndStaff() {
+            const editId = document.getElementById('editDeptId').value;
+            const dept = document.getElementById('deptNameInput').value.trim();
+            const section = document.getElementById('sectionNameInput').value.trim();
+            const leader = document.getElementById('leaderNameInput').value.trim();
+            const staffList = document.getElementById('staffListNamesInput').value.trim();
+
+            if(!dept || !leader) { 
+                alert(currentLang === 'am' ? 'እባክዎ የመምሪያውን ስም እና የመሪውን ስም ይሙሉ!' : 'Please fill department name and leader name!'); 
+                return; 
+            }
+
+            let depts = getStoredData('efleet_departments');
+            if(editId) {
+                // ማስተካከል (Update existing)
+                depts = depts.map(d => d.id == editId ? { id: Number(editId), dept, section, leader, staffList } : d);
+                document.getElementById('editDeptId').value = '';
+                document.getElementById('btnRegDept').innerText = currentLang === 'am' ? 'መምሪያ እና ሰራተኞች መዝግብ' : 'Register Dept & Staff';
+            } else {
+                // አዲስ መመዝገብ (New)
+                depts.push({ id: Date.now(), dept, section, leader, staffList });
+            }
+
+            setStoredData('efleet_departments', depts);
+            alert(currentLang === 'am' ? 'መረጃው በተሳካ ሁኔታ ተመዝግቧል/ተስተካክሏል!' : 'Department info successfully saved!');
+            
+            document.getElementById('deptNameInput').value = '';
+            document.getElementById('sectionNameInput').value = '';
+            document.getElementById('leaderNameInput').value = '';
+            document.getElementById('staffListNamesInput').value = '';
+
+            renderAdminDepartmentsTable();
+            populateAssignmentDropdowns();
+            renderPrintableReportTables();
+        }
+
+        function editDepartment(id) {
+            let depts = getStoredData('efleet_departments');
+            let d = depts.find(item => item.id == id);
+            if(d) {
+                document.getElementById('editDeptId').value = d.id;
+                document.getElementById('deptNameInput').value = d.dept;
+                document.getElementById('sectionNameInput').value = d.section || '';
+                document.getElementById('leaderNameInput').value = d.leader;
+                document.getElementById('staffListNamesInput').value = d.staffList || '';
+                document.getElementById('btnRegDept').innerText = currentLang === 'am' ? 'መረጃውን አስተካክል (Update)' : 'Update Department';
+                window.scrollTo({ top: document.getElementById('deptNameInput').offsetTop - 100, behavior: 'smooth' });
+            }
+        }
+
+        function deleteDepartment(id) {
+            if(confirm(currentLang === 'am' ? 'ይህን መምሪያ/የስራ ክፍል ከሲስተሙ ማጥፋት ይፈልጋሉ?' : 'Are you sure to delete this department?')) {
+                let depts = getStoredData('efleet_departments');
+                depts = depts.filter(item => item.id != id);
+                setStoredData('efleet_departments', depts);
+                renderAdminDepartmentsTable();
+                populateAssignmentDropdowns();
+                renderPrintableReportTables();
+            }
+        }
+
+        function renderAdminDepartmentsTable() {
+            const tbody = document.getElementById('adminRegisteredDeptsTable');
+            if(!tbody) return;
+            const depts = getStoredData('efleet_departments');
+            tbody.innerHTML = '';
+            depts.forEach(d => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${d.dept}</b></td>
+                        <td>${d.section || '-'}</td>
+                        <td style="color: #34d399; font-weight: 600;">${d.leader}</td>
+                        <td style="color: #93c5fd;">${d.staffList || '-'}</td>
+                        <td>
+                            <button class="btn-warning" style="padding:3px 8px; font-size:10px;" onclick="editDepartment(${d.id})">${currentLang === 'am' ? 'አስተካክል' : 'Edit'}</button>
+                            <button class="btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteDepartment(${d.id})">${currentLang === 'am' ? 'አጥፋ' : 'Delete'}</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 🚗 ነጂዎችን እና ተሽከርካሪዎችን መመዝገብ፣ ማስተካከል (Update)
+        function registerDriverAndCar() {
+            const editId = document.getElementById('editCarId').value;
+            const driverName = document.getElementById('adminDriverName').value.trim();
+            const carPlate = document.getElementById('adminCarPlate').value.trim();
+            const carStatus = document.getElementById('adminCarStatus').value;
+
+            if(!driverName || !carPlate) {
+                alert(currentLang === 'am' ? 'እባክዎ የነጂውን/ሰራተኞቹን ስም እና የተሽከርካሪ ታርጋ በትክክል ይሙሉ!' : 'Please fill driver/staff name and car plate!');
+                return;
+            }
+
+            let cars = getStoredData('efleet_cars');
+            if(editId) {
+                cars = cars.map(c => c.id == editId ? { ...c, car: carPlate, driver: driverName, status: carStatus } : c);
+                document.getElementById('editCarId').value = '';
+                document.getElementById('btnRegCar').innerText = currentLang === 'am' ? 'ነጂ እና መኪና አክል' : 'Add Driver & Car';
+            } else {
+                cars.push({ id: Date.now(), car: carPlate, driver: driverName, assignedTo: currentLang === 'am' ? 'ገና አልተመደበም' : 'Unassigned', status: carStatus });
+            }
+
+            setStoredData('efleet_cars', cars);
+
+            alert(currentLang === 'am' ? 'ተሽከርካሪው እና ነጂው መረጃ በተሳካ ሁኔታ ተመዝግቧል/ተስተካክሏል!' : 'Car and driver info successfully saved!');
+            document.getElementById('adminDriverName').value = '';
+            document.getElementById('adminCarPlate').value = '';
+
+            renderAdminCarsTable();
+            populateCarDropdown();
+            populateAssignmentDropdowns();
+            refreshDashboardStats();
+            renderPrintableReportTables();
+        }
+
+        function editCar(id) {
+            let cars = getStoredData('efleet_cars');
+            let c = cars.find(item => item.id == id);
+            if(c) {
+                document.getElementById('editCarId').value = c.id;
+                document.getElementById('adminDriverName').value = c.driver || '';
+                document.getElementById('adminCarPlate').value = c.car;
+                document.getElementById('adminCarStatus').value = c.status;
+                document.getElementById('btnRegCar').innerText = currentLang === 'am' ? 'መረጃውን አስተካክል (Update)' : 'Update Car & Driver';
+                window.scrollTo({ top: document.getElementById('adminDriverName').offsetTop - 100, behavior: 'smooth' });
+            }
+        }
+
+        function deleteCar(id) {
+            if(confirm(currentLang === 'am' ? 'ይህን ተሽከርካሪ እና ነጂ ከሲስተሙ ማጥፋት ይፈልጋሉ?' : 'Are you sure to delete this car and driver?')) {
+                let cars = getStoredData('efleet_cars');
+                cars = cars.filter(item => item.id != id);
+                setStoredData('efleet_cars', cars);
+                renderAdminCarsTable();
+                populateCarDropdown();
+                populateAssignmentDropdowns();
+                refreshDashboardStats();
+                renderPrintableReportTables();
+            }
+        }
+
+        function onAccountRoleChange() {
+            const role = document.getElementById('newAccRole').value;
+            const fullNameInput = document.getElementById('newAccFullName');
+            if(role === 'dept') fullNameInput.placeholder = 'ለምሳሌ፡ የህዝብ ግንኙነት መምሪያ';
+            else if(role === 'driver') fullNameInput.placeholder = 'ለምሳሌ፡ አበበ ከበደ';
+            else fullNameInput.placeholder = 'ለምሳሌ፡ ብርሃኑ ብያድጌ';
+        }
+
+        function registerSystemAccount() {
+            const username = document.getElementById('newAccUsername').value.trim();
+            const password = document.getElementById('newAccPassword').value.trim();
+            const role = document.getElementById('newAccRole').value;
+            const fullName = document.getElementById('newAccFullName').value.trim();
+
+            if(!username || !password || !fullName) {
+                alert(currentLang === 'am' ? 'እባክዎ ሁሉንም የዩዘር መለያ መረጃዎች በትክክል ይሙሉ!' : 'Please fill all account details!');
+                return;
+            }
+
+            let roleTextMap = {
+                staff: currentLang === 'am' ? 'መደበኛ ሰራተኛ' : 'Staff Member',
+                dept: currentLang === 'am' ? 'መምሪያ ኃላፊ' : 'Department Head',
+                driver: currentLang === 'am' ? 'ተሽከርካሪ ነጂ' : 'Fleet Driver'
+            };
+
+            let customUsers = JSON.parse(localStorage.getItem('efleet_custom_users')) || {};
+            customUsers[username] = { pass: password, name: fullName, role: role, roleText: roleTextMap[role] };
+            localStorage.setItem('efleet_custom_users', JSON.stringify(customUsers));
+
+            alert(currentLang === 'am' ? 'የተጠቃሚው ዩዘር መለያ በተሳካ ሁኔታ ተፈጠረ!' : 'System user account created successfully!');
+            document.getElementById('newAccUsername').value = '';
+            document.getElementById('newAccPassword').value = '';
+            document.getElementById('newAccFullName').value = '';
+            renderPrintableReportTables();
+        }
+
+        function populateAssignmentDropdowns() {
+            const carSelect = document.getElementById('assignCarSelect');
+            const deptSelect = document.getElementById('assignDeptSelect');
+            const cars = getStoredData('efleet_cars');
+            const depts = getStoredData('efleet_departments');
+
+            carSelect.innerHTML = `<option value="">${currentLang === 'am' ? 'መኪና/ሰራተኞች ይምረጡ' : 'Select Car/Staff'}</option>`;
+            cars.forEach(c => { carSelect.innerHTML += `<option value="${c.id}">${c.car} (ሰራተኞች: ${c.driver || 'ያልተመደበ'})</option>`; });
+
+            deptSelect.innerHTML = `<option value="">${currentLang === 'am' ? 'መምሪያ ይምረጡ' : 'Select Department'}</option>`;
+            depts.forEach(d => { deptSelect.innerHTML += `<option value="${d.dept} - ${d.section || ''} (${d.leader})">${d.dept} ${d.section ? '('+d.section+')' : ''} - መሪ: ${d.leader}</option>`; });
+        }
+
+        function assignCarToDepartment() {
+            const carId = document.getElementById('assignCarSelect').value;
+            const assignedDept = document.getElementById('assignDeptSelect').value;
+
+            if(!carId || !assignedDept) {
+                alert(currentLang === 'am' ? 'እባክዎ ተሽከርካሪውን እና የሚመደብለትን መምሪያ ይምረጡ!' : 'Please select both car and department!');
+                return;
+            }
+
+            let cars = getStoredData('efleet_cars');
+            cars = cars.map(c => { if(c.id == carId) c.assignedTo = assignedDept; return c; });
+            setStoredData('efleet_cars', cars);
+            alert(currentLang === 'am' ? 'ተሽከርካሪው ለመምሪያው በተሳካ ሁኔታ ተመድቧል!' : 'Fleet assigned to department successfully!');
+            renderAdminCarsTable();
+            renderPrintableReportTables();
+        }
+
+        function renderAdminCarsTable() {
+            const tbody = document.getElementById('adminRegisteredCarsTable');
+            if(!tbody) return;
+            const cars = getStoredData('efleet_cars');
+            tbody.innerHTML = '';
+            cars.forEach(c => {
+                let badgeClass = c.status === 'Active' ? 'badge-approved' : 'badge-pending';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.car}</td>
+                        <td>${c.driver || (currentLang === 'am' ? 'ያልተመደበ' : 'Unassigned')}</td>
+                        <td><span style="color: #60a5fa; font-weight: 500;">${c.assignedTo || (currentLang === 'am' ? 'ገና አልተመደበም' : 'Unassigned')}</span></td>
+                        <td><span class="badge ${badgeClass}">${c.status}</span></td>
+                        <td>
+                            <button class="btn-warning" style="padding:3px 8px; font-size:10px;" onclick="editCar(${c.id})">${currentLang === 'am' ? 'አስተካክል' : 'Edit'}</button>
+                            <button class="btn-danger" style="padding:3px 8px; font-size:10px;" onclick="deleteCar(${c.id})">${currentLang === 'am' ? 'አጥፋ' : 'Delete'}</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function generateNewFormRole() {
+            const name = document.getElementById('dynFormName').value;
+            const type = document.getElementById('dynFieldType').value;
+            if(!name) { alert(currentLang === 'am' ? 'እባክዎ ስም ያስገቡ!' : 'Please enter a name!'); return; }
+
+            let forms = getStoredData('efleet_dyn_forms');
+            forms.push({ id: Date.now(), name, type });
+            setStoredData('efleet_dyn_forms', forms);
+
+            alert(currentLang === 'am' ? 'አዲሱ ፎርም በአድሚን ተፈጥሮ ተመዝግቧል!' : 'New form generated successfully!');
+            document.getElementById('dynFormName').value = '';
+            renderDynamicForms();
+        }
+
+        function renderDynamicForms() {
+            const container = document.getElementById('dynamicFormsContainer');
+            const forms = getStoredData('efleet_dyn_forms');
+            if(forms.length === 0) {
+                container.innerHTML = `<p style="font-size: 11px; color: #93c5fd;">${currentLang === 'am' ? 'እስካሁን የተፈጠረ አዲስ ፎርም የለም።' : 'No custom forms created yet.'}</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            forms.forEach(f => {
+                container.innerHTML += `
+                    <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(59,130,246,0.3); display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>✨ ${currentLang === 'am' ? 'ፎርም ስም' : 'Form Name'}:</strong> ${f.name} &nbsp;|&nbsp; <strong>${currentLang === 'am' ? 'አይነት' : 'Type'}:</strong> ${f.type}</div>
+                        <button class="btn-danger" style="padding:2px 6px; font-size:10px;" onclick="deleteDynForm(${f.id})">❌</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteDynForm(id) {
+            let forms = getStoredData('efleet_dyn_forms');
+            forms = forms.filter(f => f.id != id);
+            setStoredData('efleet_dyn_forms', forms);
+            renderDynamicForms();
+        }
+
+        function saveFuelMaintenance() {
+            const car = document.getElementById('fmCarSelect').value;
+            const type = document.getElementById('fmTypeSelect').value;
+            const val = document.getElementById('fmValueInput').value;
+            const note = document.getElementById('fmNoteInput').value;
+            if(!car || !val) { alert(currentLang === 'am' ? 'መረጃ ይሙሉ' : 'Please fill all details'); return; }
+
+            let logs = getStoredData('efleet_fuel_maint');
+            if(currentUser.role === 'admin') {
+                logs.push({ car, type, val, note, status: currentLang === 'am' ? 'መዝገብ (Recorded)' : 'Recorded' });
+                setStoredData('efleet_fuel_maint', logs);
+                alert(currentLang === 'am' ? 'በተሳካ ሁኔታ ተመዝግቧል!' : 'Successfully recorded!');
+            } else {
+                logs.push({ car, type, val, note: `${note} (${currentLang === 'am' ? 'በነጂ የቀረበ' : 'Driver Submitted'})`, status: currentLang === 'am' ? 'የጸደቀ ጥያቄ ይጠብቃል (Pending)' : 'Pending Approval' });
+                setStoredData('efleet_fuel_maint', logs);
+                alert(currentLang === 'am' ? 'የነዳጅ/ጋራጅ ማመልከቻዎ ለአድሚን ተልኳል!' : 'Fuel/maintenance request sent to admin!');
+            }
+
+            document.getElementById('fmValueInput').value = '';
+            document.getElementById('fmNoteInput').value = '';
+            renderFuelMaintenanceTable();
+        }
+
+        function renderFuelMaintenanceTable() {
+            const tbody = document.getElementById('fmTableBody');
+            const logs = getStoredData('efleet_fuel_maint');
+            tbody.innerHTML = '';
+            logs.forEach(l => {
+                if(currentUser.role === 'admin') {
+                    tbody.innerHTML += `<tr><td>${l.car}</td><td>${l.type}</td><td>${l.val}</td><td>${l.note || '-'}</td></tr>`;
+                } else if(currentUser.role === 'driver') {
+                    tbody.innerHTML += `<tr><td>${l.car}</td><td>${l.type}</td><td>${l.val}</td><td><span class="badge badge-pending">${l.status || 'Pending'}</span></td></tr>`;
+                }
+            });
+        }
+
+        function populateCarDropdown() {
+            const select = document.getElementById('fmCarSelect');
+            const cars = getStoredData('efleet_cars');
+            select.innerHTML = `<option value="">${currentLang === 'am' ? 'መኪና ይምረጡ' : 'Select Car'}</option>`;
+            cars.forEach(c => { select.innerHTML += `<option value="${c.car}">${c.car} (ሰራተኞች: ${c.driver || ''})</option>`; });
+        }
+
+        function refreshDashboardStats() {
+            const cars = getStoredData('efleet_cars');
+            document.getElementById('statActiveCars').innerText = cars.filter(c => c.status === 'Active').length;
+            document.getElementById('statGarageCars').innerText = cars.filter(c => c.status === 'Garage').length;
+        }
+
+        window.onload = function() {
+            const savedUser = localStorage.getItem('efleet_current_user');
+            if(savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('loginOverlay').style.display = 'none';
+                initSessionUI();
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                switchLoginRole('admin', document.querySelector('.login-tab'));
+            }
+        };
+    </script>
+</body>
+</html>
